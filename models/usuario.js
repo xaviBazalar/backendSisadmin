@@ -18,12 +18,14 @@ const UsuarioSchema = Schema({
     rol: {
         type: String,
         required: true,
-        emun: ['ADMIN_ROLE', 'USER_ROLE']
+        //emun: ['ADMIN_ROLE', 'USER_ROLE']
     },
     estado: {
         type: Boolean,
         default: true
-    }/*,
+    },
+    perfil: { type: Schema.ObjectId, ref: "perfil" }
+    /*,
     google: {
         type: Boolean,
         default: false

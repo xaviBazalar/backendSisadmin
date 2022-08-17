@@ -2,38 +2,29 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 
 
-const Usuario = require('../models/usuario');
-const Rol = require('../models/role');
-const Perfil = require('../models/perfil.js');
+const Tarea = require('../models/tarea');
 
 
-const usuariosGet = async(req = request, res = response) => {
+
+const tareasGet = async(req = request, res = response) => {
 
     const { limite = 5, desde = 0 } = req.query;
     const query = { estado: true };
 
-    /*const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
+    const [ total, tareas ] = await Promise.all([
+        Tarea.countDocuments(query),
+        Tarea.find(query)
             .skip( Number( desde ) )
-            .limit(Number( limite )).populate( { path: "rol" })
-    ]);*/
+            .limit(Number( limite ))
+    ]);
 
-    Usuario.find({}, function (err, usuarios) {
-        Perfil.populate(usuarios, { path: "perfil" }, function (err, usuarios) {
-          res.json({
-                usuarios,
-
-            });
-        });
-      });
-
-    /*res.json({
-    total,
-        usuarios
-    });*/
+    res.json({
+        total,
+        tareas
+    });
 }
 
+/*
 const usuariosPost = async(req, res = response) => {
     
     const { nombre, correo, password, rol } = req.body;
@@ -67,11 +58,7 @@ const usuariosPut = async(req, res = response) => {
     res.json(usuario);
 }
 
-const usuariosPatch = (req, res = response) => {
-    res.json({
-        msg: 'patch API - usuariosPatch'
-    });
-}
+
 
 const usuariosDelete = async(req, res = response) => {
 
@@ -86,13 +73,15 @@ const usuariosDelete = async(req, res = response) => {
     res.json(usuario);
 }
 
-
+*/
+const tareasPatch = (req, res = response) => {
+    res.json({
+        msg: 'patch API - tareasPatch'
+    });
+}
 
 
 module.exports = {
-    usuariosGet,
-    usuariosPost,
-    usuariosPut,
-    usuariosPatch,
-    usuariosDelete,
+    tareasGet,
+    tareasPatch
 }
