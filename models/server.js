@@ -13,7 +13,10 @@ class Server {
         this.estadoResultadoPatch = '/api/estadoResultado';
         this.estadoSolicitudPatch = '/api/estadoSolicitud';
         this.gerenciaPatch = '/api/gerencia';
-
+        this.contratosPath = '/api/contratos';
+        this.tareasContratoPatch='/api/tareasContrato';
+        this.solicitudesPatch='/api/solicitudes'
+        this.loginPatch='/api/login'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -48,6 +51,10 @@ class Server {
         this.app.use( this.estadoResultadoPatch, require('../routes/estado_resultados'));
         this.app.use( this.estadoSolicitudPatch, require('../routes/estado_solicitudes'));
         this.app.use( this.gerenciaPatch, require('../routes/gerencias'));
+        this.app.use( this.contratosPath, require('../routes/contratos'));
+        this.app.use( this.tareasContratoPatch, require('../routes/tareasContrato'));
+        this.app.use( this.solicitudesPatch, require('../routes/solicitudes'));
+        this.app.use( this.loginPatch, require('../routes/login'));
     }
 
     listen() {

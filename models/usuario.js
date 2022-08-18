@@ -11,6 +11,11 @@ const UsuarioSchema = Schema({
         required: [true, 'El correo es obligatorio'],
         unique: true
     },
+    login: {
+        type: String,
+        required: [true, 'El login es obligatorio'],
+        unique: true
+    },
     password: {
         type: String,
         required: [true, 'La contraseña es obligatoria'],
