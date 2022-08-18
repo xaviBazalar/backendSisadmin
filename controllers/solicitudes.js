@@ -19,9 +19,12 @@ const EstadoSolicitud = require('../models/estadoSolicitud.js');
 
 const solicitudesGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
-    const query = {  };
+    const { id } = req.query;
+    let query = { _id:id };
 
+    if(id===undefined){
+        query = { };
+    }
     /*const [ total, usuarios ] = await Promise.all([
         Usuario.countDocuments(query),
         Usuario.find(query)
@@ -37,7 +40,7 @@ const solicitudesGet = async(req = request, res = response) => {
         
     ]);*/
     
-        Solicitud.find({}, function (err, solicitudes) {
+        Solicitud.find(query, function (err, solicitudes) {
             Gerencia.populate(solicitudes, { path: "gerencia" }, function (err, solicitudes) {
                 Contrato.populate(solicitudes, { path: "contrato" }, function (err, solicitudes) {
                     Tarea.populate(solicitudes, { path: "tarea" }, function (err, solicitudes) {
