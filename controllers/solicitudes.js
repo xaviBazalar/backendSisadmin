@@ -15,7 +15,7 @@ const Contrato = require('../models/contrato');
 const Tarea = require('../models/tarea');
 const Usuario = require('../models/usuario');
 const EstadoSolicitud = require('../models/estadoSolicitud.js');
-
+const EstadoResultado= require('../models/estadoResultado')
 
 const solicitudesGet = async(req = request, res = response) => {
 
@@ -25,6 +25,9 @@ const solicitudesGet = async(req = request, res = response) => {
     if(id===undefined){
         query = { };
     }
+
+    
+
     /*const [ total, usuarios ] = await Promise.all([
         Usuario.countDocuments(query),
         Usuario.find(query)
@@ -47,8 +50,10 @@ const solicitudesGet = async(req = request, res = response) => {
                         EstadoSolicitud.populate(solicitudes, { path: "estado_solicitud" }, function (err, solicitudes) {
                             Usuario.populate(solicitudes, { path: "gst" }, function (err, solicitudes) {
                                 Usuario.populate(solicitudes, { path: "bko" }, function (err, solicitudes) {
-                                    res.json({
-                                        solicitudes,
+                                    EstadoResultado.populate(solicitudes, { path: "estado_resultado" }, function (err, solicitudes) {
+                                        res.json({
+                                            solicitudes,
+                                        });
                                     });
                                 });
                             });
@@ -65,10 +70,33 @@ const solicitudesGet = async(req = request, res = response) => {
     });*/
 }
 
+const getFecEntrega=()=>{
+    hoy = new Date();
+    i=0;
+    while (i<7) { // 7 días habiles
+        hoy.setTime(hoy.getTime()+24*60*60*1000); // añadimos 1 día
+        if (hoy.getDay() != 6 && hoy.getDay() != 0)
+            i++;  
+    }
+    fecha = hoy.getDate()+ '/' + ((hoy.getMonth())+1) + '/' + hoy.getFullYear();
+    let mes=((hoy.getMonth())+1);
+    mes=(mes.toString().length==1)?"0"+mes:mes;
+    let dia=hoy.getDate();
+    dia=(dia.toString().length==1)?"0"+dia:dia;
+    return hoy.getFullYear()+"-"+mes+"-"+dia
+}
+
 const solicitudesPost = async(req, res = response) => {
-    
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,observacion,fecha_solicitud,fecha_inicio} = req.body;
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,observacion,fecha_solicitud,fecha_inicio });
+
+    const [ solicitudes ] = await Promise.all([
+        Solicitud.find().limit(1).sort({$natural:-1})
+    ]);
+
+    let fecha_entrega=getFecEntrega();
+
+    let idsecuencia=solicitudes[0].idsecuencia+1
+    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio} = req.body;
+    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia });
 
     // Guardar en BD
     await solicitud.save();

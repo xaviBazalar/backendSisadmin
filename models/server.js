@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-
+const fileUpload =require('express-fileupload')
 const { dbConnection } = require('../database/config');
 
 class Server {
@@ -17,6 +17,12 @@ class Server {
         this.tareasContratoPatch='/api/tareasContrato';
         this.solicitudesPatch='/api/solicitudes'
         this.loginPatch='/api/login'
+        this.historialResultadoSolicitudPatch='/api/historialResultadoSolicitud'
+        this.filePatch='/api/upload'
+        this.documentosEntradaPatch='/api/documentosEntrada'
+        this.documentosSalidaPatch='/api/documentosSalida'
+        this.tareaDocumentosEntradaPatch='/api/tareaDocumentosEntrada'
+        this.tareaDocumentosSalidaPatch='/api/tareaDocumentosSalida'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -25,6 +31,8 @@ class Server {
 
         // Rutas de mi aplicación
         this.routes();
+
+
     }
 
     async conectarDB() {
@@ -33,7 +41,9 @@ class Server {
 
 
     middlewares() {
-
+        this.app.use(fileUpload({
+            createParentPath: true
+        }));
         // CORS
         this.app.use( cors() );
 
@@ -42,6 +52,11 @@ class Server {
 
         // Directorio Público
         this.app.use( express.static('public') );
+
+        /*this.app.use(fileUpload({
+            useTempFiles:true,
+            tempFileDir:'/tmp/'
+        }))*/
 
     }
 
@@ -55,6 +70,12 @@ class Server {
         this.app.use( this.tareasContratoPatch, require('../routes/tareasContrato'));
         this.app.use( this.solicitudesPatch, require('../routes/solicitudes'));
         this.app.use( this.loginPatch, require('../routes/login'));
+        this.app.use( this.historialResultadoSolicitudPatch, require('../routes/historialResultadoSolicitud'));
+        this.app.use( this.filePatch, require('../routes/upload'))
+        this.app.use( this.documentosEntradaPatch, require('../routes/documentosEntrada'))
+        this.app.use( this.documentosSalidaPatch, require('../routes/documentosSalida'))
+        this.app.use( this.tareaDocumentosEntradaPatch, require('../routes/tareaDocumentosEntrada'))
+        this.app.use( this.tareaDocumentosSalidaPatch, require('../routes/tareaDocumentosSalida'))
     }
 
     listen() {

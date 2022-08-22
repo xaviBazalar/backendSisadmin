@@ -11,7 +11,7 @@ const loginPost = async(req, res = response) => {
     
     const { login, password } = req.body;
     const query = { login: login,password:password };
-    console.log(query)
+ 
     Usuario.find(query, function (err, usuarios) {
         Perfil.populate(usuarios, { path: "perfil" }, function (err, usuarios) {
           res.json({

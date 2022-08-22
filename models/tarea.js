@@ -15,6 +15,9 @@ const TareaSchema = Schema({
         type: Boolean,
         default: true
     }
+},
+{ 
+    collection : 'tareas' 
 });
 
 
