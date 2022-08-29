@@ -19,6 +19,9 @@ const HistorialResultadoSolicitudSchema = Schema({
         type: String,
         default:getFecRegistro()
     },
+    fecha_respuesta: {
+        type: String,
+    },
     usuario: { type: Schema.ObjectId, ref: "usuarios" },
     mensaje: {
         type: String,
@@ -28,6 +31,11 @@ const HistorialResultadoSolicitudSchema = Schema({
         type: String,
         default:""
     },
+    url_file: {
+        type: String,
+        default:""
+    },
+    usuario_respuesta: { type: Schema.ObjectId, ref: "usuarios" },
 },
 { 
     collection : 'historial_resultado_solicitud' 

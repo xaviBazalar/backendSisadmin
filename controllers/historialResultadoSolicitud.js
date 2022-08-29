@@ -5,6 +5,8 @@ const HistorialResultadoSolicitud = require("../models/historialResultadoSolicit
 const Solicitud = require('../models/solicitud');
 const EstadoResultado= require('../models/estadoResultado')
 const Usuario = require('../models/usuario')
+const BitacoraSolicitud = require('../models/bitacora_solicitud')
+const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const historialResultadoSolicitudGet = async(req = request, res = response) => {
 
@@ -15,27 +17,15 @@ const historialResultadoSolicitudGet = async(req = request, res = response) => {
         query = { };
     }
 
-    /*const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite )).populate( { path: "rol" })
-    ]);*/
-
-   /* const [ total,solicitudes ] = await Promise.all([
-        Solicitud.countDocuments(query),
-        Solicitud.find({},function(err,solicitudes){
-            Gerencia.populate(solicitudes, { path: "gerencia" })
-        })
-        
-    ]);*/
     
         HistorialResultadoSolicitud.find(query, function (err, historial_resultado_solicitud) {
             Solicitud.populate(historial_resultado_solicitud, { path: "solicitud" }, function (err, historial_resultado_solicitud) {
                 EstadoResultado.populate(historial_resultado_solicitud, { path: "estado_resultado" }, function (err, historial_resultado_solicitud) {
                     Usuario.populate(historial_resultado_solicitud, { path: "usuario" }, function (err, historial_resultado_solicitud) {
-                        res.json({
-                            historial_resultado_solicitud
+                        Usuario.populate(historial_resultado_solicitud, { path: "usuario_respuesta" }, function (err, historial_resultado_solicitud) {
+                            res.json({
+                                historial_resultado_solicitud
+                            });
                         });
                     });
                 });
@@ -47,6 +37,30 @@ const historialResultadoSolicitudGet = async(req = request, res = response) => {
         total,
         solicitudes
     });*/
+}
+
+const historialResultadoSolicitudPut = async(req, res = response) => {
+
+    const { id } = req.params;
+    const { respuesta,fecha_respuesta,usuario_respuesta ,url_file} = req.body;
+
+    const dataUpdate={
+        _id:id,
+        respuesta:respuesta,
+        fecha_respuesta:fecha_respuesta,
+        usuario_respuesta:usuario_respuesta,
+        url_file:url_file
+    }
+
+    const historialResultadoSolicitud = await HistorialResultadoSolicitud.findByIdAndUpdate( id, dataUpdate );
+    let solicitud_=historialResultadoSolicitud.solicitud
+    let evento="Actualización Solicitud -  Respuesta Pregunta"
+    const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
+    await bitacoraSolicitud.save();
+
+    
+
+    res.json(historialResultadoSolicitud);
 }
 
 const getFecRegistro=()=>{
@@ -62,11 +76,22 @@ const getFecRegistro=()=>{
 
 const historialResultadoSolicitudPost = async(req, res = response) => {
     let fecha_registro=getFecRegistro()
-    const { solicitud,estado_resultado,usuario,mensaje} = req.body;
+    const { solicitud,estado_resultado,usuario,mensaje,usuario_asignado} = req.body;
     const solicitudR = new HistorialResultadoSolicitud({ solicitud, estado_resultado,fecha_registro, usuario, mensaje});
 
     // Guardar en BD
     await solicitudR.save();
+
+
+    let solicitud_=solicitudR.solicitud
+    let evento="Actualización Solicitud -  Ingreso Pregunta"
+    const bitacoraSolicitud = new BitacoraSolicitud({solicitud_ ,evento });
+    await bitacoraSolicitud.save();
+
+    let tipo="Historial Solicitud"
+    let link="/solicitud/"+solicitudR.solicitud
+    const notificacioUsuario= new NotificacionUsuario({"usuario":usuario_asignado,tipo,link})
+    await notificacioUsuario.save();
 
     res.json({
         solicitudR
@@ -84,5 +109,6 @@ const historialResultadoSolicitudPatch = (req, res = response) => {
 module.exports = {
     historialResultadoSolicitudGet,
     historialResultadoSolicitudPost,
+    historialResultadoSolicitudPut,
     historialResultadoSolicitudPatch,
 }

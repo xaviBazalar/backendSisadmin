@@ -40,7 +40,14 @@ const SolicitudSchema = Schema({
     idsecuencia:{
         type:Number,
         default: 2
-    }
+    },
+    randomId: {
+        type: String
+    },
+    notificado: {
+        type: Boolean,
+        default:false
+    },
 },
 { 
     collection : 'solicitudes' 

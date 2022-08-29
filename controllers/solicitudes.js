@@ -16,6 +16,8 @@ const Tarea = require('../models/tarea');
 const Usuario = require('../models/usuario');
 const EstadoSolicitud = require('../models/estadoSolicitud.js');
 const EstadoResultado= require('../models/estadoResultado')
+const BitacoraSolicitud= require('../models/bitacora_solicitud')
+const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
 
@@ -26,22 +28,6 @@ const solicitudesGet = async(req = request, res = response) => {
         query = { };
     }
 
-    
-
-    /*const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite )).populate( { path: "rol" })
-    ]);*/
-
-   /* const [ total,solicitudes ] = await Promise.all([
-        Solicitud.countDocuments(query),
-        Solicitud.find({},function(err,solicitudes){
-            Gerencia.populate(solicitudes, { path: "gerencia" })
-        })
-        
-    ]);*/
     
         Solicitud.find(query, function (err, solicitudes) {
             Gerencia.populate(solicitudes, { path: "gerencia" }, function (err, solicitudes) {
@@ -92,20 +78,68 @@ const solicitudesPost = async(req, res = response) => {
         Solicitud.find().limit(1).sort({$natural:-1})
     ]);
 
+    
     let fecha_entrega=getFecEntrega();
 
-    let idsecuencia=solicitudes[0].idsecuencia+1
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio} = req.body;
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia });
+    let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
+
+    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId} = req.body;
+    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId });
 
     // Guardar en BD
     await solicitud.save();
+
+    let solicitud_=solicitud._id
+    let evento="Nueva Solicitud -  En proceso"
+    const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
+    await bitacoraSolicitud.save();
+
+    let usuario=gst
+    let tipo="Solicitud"
+    let link="/solicitud/"+solicitud_
+    const notificacioUsuario= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuario.save();
 
     res.json({
         solicitud
     });
 }
 
+
+const solicitudesPut = async(req, res = response) => {
+
+    const { id } = req.params;
+
+    const { estado_solicitud, fecha_inicio, fecha_solicitud, gst, bko,estado_resultado } = req.body;
+    let dataUpdate;
+    let evento;
+    if(estado_resultado===undefined){
+        dataUpdate={
+            _id:id,
+            estado_solicitud:estado_solicitud,
+            fecha_inicio:fecha_inicio,
+            fecha_solicitud:fecha_solicitud,
+            gst:gst,
+            bko:bko
+        } 
+        evento="Actualización Solicitud - Estado Solicitud"
+    }else{
+        dataUpdate={
+            _id:id,
+            estado_resultado:estado_resultado,
+        } 
+        evento="Actualización Solicitud - Estado Resultado"
+    }
+
+    const solicitud = await Solicitud.findByIdAndUpdate( id, dataUpdate );
+
+    let solicitud_=id
+    
+    const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
+    await bitacoraSolicitud.save();
+
+    res.json(solicitud);
+}
 
 const solicitudesPatch = (req, res = response) => {
     res.json({
@@ -120,5 +154,6 @@ const solicitudesPatch = (req, res = response) => {
 module.exports = {
     solicitudesGet,
     solicitudesPost,
+    solicitudesPut,
     solicitudesPatch,
 }

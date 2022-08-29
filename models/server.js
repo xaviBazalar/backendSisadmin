@@ -16,13 +16,20 @@ class Server {
         this.contratosPath = '/api/contratos';
         this.tareasContratoPatch='/api/tareasContrato';
         this.solicitudesPatch='/api/solicitudes'
+        this.solicitudesUsuarioPatch='/api/solicitudesUsuario'
         this.loginPatch='/api/login'
         this.historialResultadoSolicitudPatch='/api/historialResultadoSolicitud'
         this.filePatch='/api/upload'
         this.documentosEntradaPatch='/api/documentosEntrada'
         this.documentosSalidaPatch='/api/documentosSalida'
         this.tareaDocumentosEntradaPatch='/api/tareaDocumentosEntrada'
+        this.tareaDocumentosEntradaSolicitudPatch='/api/tareaDocumentosEntradaSolicitud'
+        this.tareaDocumentosSalidaSolicitudPatch='/api/tareaDocumentosSalidaSolicitud'
         this.tareaDocumentosSalidaPatch='/api/tareaDocumentosSalida'
+        this.documentacionSolicitudPatch='/api/documentacionSolicitudes'
+        this.bitacoraSolicitudPatch='/api/bitacoraSolicitud'
+        this.gestionSolicitudPatch='/api/gestionSolicitud'
+        this.notificacionUsuarioPatch='/api/notificacionesUsuario'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -69,13 +76,20 @@ class Server {
         this.app.use( this.contratosPath, require('../routes/contratos'));
         this.app.use( this.tareasContratoPatch, require('../routes/tareasContrato'));
         this.app.use( this.solicitudesPatch, require('../routes/solicitudes'));
+        this.app.use( this.solicitudesUsuarioPatch, require('../routes/solicitudesUsuario'))
         this.app.use( this.loginPatch, require('../routes/login'));
         this.app.use( this.historialResultadoSolicitudPatch, require('../routes/historialResultadoSolicitud'));
         this.app.use( this.filePatch, require('../routes/upload'))
         this.app.use( this.documentosEntradaPatch, require('../routes/documentosEntrada'))
         this.app.use( this.documentosSalidaPatch, require('../routes/documentosSalida'))
         this.app.use( this.tareaDocumentosEntradaPatch, require('../routes/tareaDocumentosEntrada'))
+        this.app.use( this.tareaDocumentosEntradaSolicitudPatch, require('../routes/tareaDocumentoEntradaSolicitud'))
         this.app.use( this.tareaDocumentosSalidaPatch, require('../routes/tareaDocumentosSalida'))
+        this.app.use( this.tareaDocumentosSalidaSolicitudPatch, require('../routes/tareaDocumentoSalidaSolicitud'))
+        this.app.use( this.documentacionSolicitudPatch, require('../routes/documentacionSolicitudes'))
+        this.app.use( this.bitacoraSolicitudPatch, require('../routes/bitacoraSolicitud'))
+        this.app.use( this.gestionSolicitudPatch, require('../routes/gestionSolicitud'))
+        this.app.use( this.notificacionUsuarioPatch, require('../routes/notificacionesUsuario'))
     }
 
     listen() {
