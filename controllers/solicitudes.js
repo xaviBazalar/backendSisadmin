@@ -29,15 +29,15 @@ const solicitudesGet = async(req = request, res = response) => {
     }
 
 
-    if(id===undefined & gerencia!=""){
+    if(id===undefined & gerencia!="" & gerencia!==undefined){
         query.gerencia=gerencia
     }
 
-    if(id===undefined & tarea!=""){
+    if(id===undefined & tarea!="" & tarea!==undefined){
         query.tarea=tarea
     }
 
-    if(id===undefined & perfil!=""){
+    if(id===undefined & perfil!="" & perfil!==undefined){
         query.gst=mongoose.Types. ObjectId(perfil)
     
         /*if(perfil=="62fb0fae57ae2b6d49ac5b88"){
@@ -51,11 +51,11 @@ const solicitudesGet = async(req = request, res = response) => {
         
     }
 
-    if(id===undefined & estado_solicitud!=""){
+    if(id===undefined & estado_solicitud!="" & estado_solicitud!==undefined){
         query.estado_solicitud=estado_solicitud
     }
 
-    if(id===undefined & estado_resultado!=""){
+    if(id===undefined & estado_resultado!="" & estado_resultado!==undefined){
         query.estado_resultado=estado_resultado
     }
 
