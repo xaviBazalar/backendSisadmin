@@ -10,12 +10,17 @@ const Usuario= require('../models/usuario')
 
 const notificacionUsuarioGet = async(req = request, res = response) => {
 
-    const { usuario } = req.query;
-    let query = {"usuario":mongoose.Types. ObjectId(usuario),"visto": false}   ;
+    const { usuario,visto } = req.query;
+    let query = {"usuario":mongoose.Types. ObjectId(usuario),"visto": (visto=="true")?true:false}   ;
     
     if(usuario===undefined){
         query = { };
     }
+
+    if(visto=="true"){
+        query = {"usuario":mongoose.Types. ObjectId(usuario)}   ;
+    }
+
 
     const [ total, notificaciones_usuario ] = await Promise.all([
         NotificacionUsuario.countDocuments(query),

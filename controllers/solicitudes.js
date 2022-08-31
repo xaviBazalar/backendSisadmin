@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
+const mongoose = require('mongoose');
 
 /**
  *  gerencia: { type: Schema.ObjectId, ref: "gerencia" },
@@ -20,13 +21,45 @@ const BitacoraSolicitud= require('../models/bitacora_solicitud')
 const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
-
-    const { id } = req.query;
+    
+    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado} = req.query;
     let query = { _id:id };
-
     if(id===undefined){
         query = { };
     }
+
+
+    if(id===undefined & gerencia!=""){
+        query.gerencia=gerencia
+    }
+
+    if(id===undefined & tarea!=""){
+        query.tarea=tarea
+    }
+
+    if(id===undefined & perfil!=""){
+        query.gst=mongoose.Types. ObjectId(perfil)
+    
+        /*if(perfil=="62fb0fae57ae2b6d49ac5b88"){
+            query.gst=mongoose.Types. ObjectId(perfil)
+        }
+
+
+        if(perfil=="62fb0fb757ae2b6d49ac5b89"){
+            query.bko=mongoose.Types. ObjectId(perfil)
+        }*/
+        
+    }
+
+    if(id===undefined & estado_solicitud!=""){
+        query.estado_solicitud=estado_solicitud
+    }
+
+    if(id===undefined & estado_resultado!=""){
+        query.estado_resultado=estado_resultado
+    }
+
+    console.log(query)
 
     
         Solicitud.find(query, function (err, solicitudes) {

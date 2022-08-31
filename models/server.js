@@ -30,6 +30,7 @@ class Server {
         this.bitacoraSolicitudPatch='/api/bitacoraSolicitud'
         this.gestionSolicitudPatch='/api/gestionSolicitud'
         this.notificacionUsuarioPatch='/api/notificacionesUsuario'
+        this.perfilesPatch='/api/perfiles'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -90,6 +91,7 @@ class Server {
         this.app.use( this.bitacoraSolicitudPatch, require('../routes/bitacoraSolicitud'))
         this.app.use( this.gestionSolicitudPatch, require('../routes/gestionSolicitud'))
         this.app.use( this.notificacionUsuarioPatch, require('../routes/notificacionesUsuario'))
+        this.app.use( this.perfilesPatch, require('../routes/perfiles'))
     }
 
     listen() {
