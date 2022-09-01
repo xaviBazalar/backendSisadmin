@@ -17,6 +17,7 @@ const getFecEntrega=()=>{
 }
 
 const SolicitudSchema = Schema({
+    solicitante: { type: Schema.ObjectId, ref: "solicitante" },
     gerencia: { type: Schema.ObjectId, ref: "gerencia" },
     contrato: { type: Schema.ObjectId, ref: "contrato" },
     tarea: { type: Schema.ObjectId, ref: "tarea" },
@@ -47,6 +48,9 @@ const SolicitudSchema = Schema({
     notificado: {
         type: Boolean,
         default:false
+    },
+    ingresado: {
+        type: Boolean,
     },
 },
 { 

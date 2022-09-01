@@ -22,12 +22,21 @@ const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
     
-    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado} = req.query;
+    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko} = req.query;
     let query = { _id:id };
     if(id===undefined){
         query = { };
     }
 
+    
+
+    if(id===undefined & solicitante!="" & solicitante!==undefined){
+        query.solicitante=mongoose.Types. ObjectId(solicitante)
+    }
+
+    if(id===undefined & ingresado!="" & ingresado!==undefined){
+        query.ingresado=(ingresado==true || ingresado=="true")?true:false
+    }
 
     if(id===undefined & gerencia!="" & gerencia!==undefined){
         query.gerencia=gerencia
@@ -37,7 +46,7 @@ const solicitudesGet = async(req = request, res = response) => {
         query.tarea=tarea
     }
 
-    if(id===undefined & perfil!="" & perfil!==undefined){
+    if(id===undefined & perfil!="" & perfil!==undefined & gst===undefined){
         query.gst=mongoose.Types. ObjectId(perfil)
     
         /*if(perfil=="62fb0fae57ae2b6d49ac5b88"){
@@ -51,6 +60,14 @@ const solicitudesGet = async(req = request, res = response) => {
         
     }
 
+    if(id===undefined & gst!==undefined){
+        query.gst=mongoose.Types. ObjectId(gst)
+    }
+
+    if(id===undefined & bko!==undefined){
+        query.bko=mongoose.Types. ObjectId(bko)
+    }
+
     if(id===undefined & estado_solicitud!="" & estado_solicitud!==undefined){
         query.estado_solicitud=estado_solicitud
     }
@@ -59,7 +76,7 @@ const solicitudesGet = async(req = request, res = response) => {
         query.estado_resultado=estado_resultado
     }
 
-    console.log(query)
+    //console.log(query)
 
     
         Solicitud.find(query, function (err, solicitudes) {
@@ -70,8 +87,10 @@ const solicitudesGet = async(req = request, res = response) => {
                             Usuario.populate(solicitudes, { path: "gst" }, function (err, solicitudes) {
                                 Usuario.populate(solicitudes, { path: "bko" }, function (err, solicitudes) {
                                     EstadoResultado.populate(solicitudes, { path: "estado_resultado" }, function (err, solicitudes) {
-                                        res.json({
-                                            solicitudes,
+                                        Usuario.populate(solicitudes, { path: "solicitante" }, function (err, solicitudes) {
+                                            res.json({
+                                                solicitudes,
+                                            });
                                         });
                                     });
                                 });
@@ -116,14 +135,17 @@ const solicitudesPost = async(req, res = response) => {
 
     let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
 
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId} = req.body;
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId });
+    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante} = req.body;
+    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId ,ingresado,solicitante});
 
     // Guardar en BD
     await solicitud.save();
 
+    
+    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
+
     let solicitud_=solicitud._id
-    let evento="Nueva Solicitud -  En proceso"
+    let evento=`Nueva Solicitud -  En proceso - ${usuario_.nombre}`
     const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
     await bitacoraSolicitud.save();
 
@@ -143,10 +165,16 @@ const solicitudesPut = async(req, res = response) => {
 
     const { id } = req.params;
 
-    const { estado_solicitud, fecha_inicio, fecha_solicitud, gst, bko,estado_resultado } = req.body;
+    const { estado_solicitud, fecha_inicio, fecha_solicitud, gst, bko,estado_resultado,ingresado,solicitante } = req.body;
     let dataUpdate;
     let evento;
-    if(estado_resultado===undefined){
+
+    if(ingresado!==undefined){
+        dataUpdate={
+            _id:id,
+            ingresado:ingresado,
+        } 
+    }else if(estado_resultado===undefined){
         dataUpdate={
             _id:id,
             estado_solicitud:estado_solicitud,
@@ -155,13 +183,16 @@ const solicitudesPut = async(req, res = response) => {
             gst:gst,
             bko:bko
         } 
-        evento="Actualización Solicitud - Estado Solicitud"
+
+        const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
+        evento=`Actualización Solicitud - Estado Solicitud - ${usuario_.nombre}`
     }else{
         dataUpdate={
             _id:id,
             estado_resultado:estado_resultado,
         } 
-        evento="Actualización Solicitud - Estado Resultado"
+        const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
+        evento=`Actualización Solicitud - Estado Resultado - ${usuario_.nombre}`
     }
 
     const solicitud = await Solicitud.findByIdAndUpdate( id, dataUpdate );

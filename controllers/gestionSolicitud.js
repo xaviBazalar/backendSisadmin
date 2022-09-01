@@ -4,7 +4,7 @@ const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
 
 
-
+const Usuario = require('../models/usuario')
 const DocumentacionSolicitud= require('../models/documentacionSolicitud')
 const GestionSolicitud = require('../models/gestionSolicitud')
 const BitacoraSolicitud = require('../models/bitacora_solicitud')
@@ -33,14 +33,16 @@ const gestionSolicitudGet = async(req = request, res = response) => {
 }
 
 const gestionSolicitudPost = async(req, res = response) => {
-    const { solicitud,documentacion_solicitud,validado,estado,observacion} = req.body;
+    const { solicitud,documentacion_solicitud,validado,estado,observacion,solicitante} = req.body;
     const gestionSolicitud = new GestionSolicitud({ solicitud, documentacion_solicitud,validado, estado, observacion});
 
     // Guardar en BD
     await gestionSolicitud.save();
 
+    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
+
     let solicitud_=solicitud
-    let evento="Actualización Solicitud -  Ingreso Gestion Solicitud"
+    let evento=`Actualización Solicitud -  Ingreso Gestion Solicitud - ${usuario_.nombre}`
     const bitacoraSolicitud = new BitacoraSolicitud({solicitud_ ,evento });
     await bitacoraSolicitud.save();
 
@@ -52,7 +54,7 @@ const gestionSolicitudPost = async(req, res = response) => {
 const gestionSolicitudPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { validado,estado,observacion,solicitud} = req.body;
+    const { validado,estado,observacion,solicitud,solicitante} = req.body;
 
     const dataUpdate={
         _id:id,
@@ -62,8 +64,12 @@ const gestionSolicitudPut = async(req, res = response) => {
     }
 
     const gestionSolicitud = await GestionSolicitud.findByIdAndUpdate( id, dataUpdate );
+
+    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
+
+
     let solicitud_=solicitud
-    let evento="Acutalización Solicitud -  Update Gestion Solicitud"
+    let evento=`Actualización Solicitud -  Update Gestion Solicitud - ${usuario_.nombre}`
     const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
     await bitacoraSolicitud.save();
 

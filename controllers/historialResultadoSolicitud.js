@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
+const mongoose = require('mongoose');
 
 const HistorialResultadoSolicitud = require("../models/historialResultadoSolicitud")
 const Solicitud = require('../models/solicitud');
@@ -42,7 +43,7 @@ const historialResultadoSolicitudGet = async(req = request, res = response) => {
 const historialResultadoSolicitudPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { respuesta,fecha_respuesta,usuario_respuesta ,url_file} = req.body;
+    const { respuesta,fecha_respuesta,usuario_respuesta ,url_file,solicitante} = req.body;
 
     const dataUpdate={
         _id:id,
@@ -53,8 +54,10 @@ const historialResultadoSolicitudPut = async(req, res = response) => {
     }
 
     const historialResultadoSolicitud = await HistorialResultadoSolicitud.findByIdAndUpdate( id, dataUpdate );
+
+    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
     let solicitud_=historialResultadoSolicitud.solicitud
-    let evento="Actualización Solicitud -  Respuesta Pregunta"
+    let evento=`Actualización Solicitud -  Respuesta Pregunta - ${usuario_.nombre}`
     const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
     await bitacoraSolicitud.save();
 
@@ -76,15 +79,16 @@ const getFecRegistro=()=>{
 
 const historialResultadoSolicitudPost = async(req, res = response) => {
     let fecha_registro=getFecRegistro()
-    const { solicitud,estado_resultado,usuario,mensaje,usuario_asignado} = req.body;
+    const { solicitud,estado_resultado,usuario,mensaje,usuario_asignado,solicitante} = req.body;
     const solicitudR = new HistorialResultadoSolicitud({ solicitud, estado_resultado,fecha_registro, usuario, mensaje});
 
     // Guardar en BD
     await solicitudR.save();
 
+    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
 
     let solicitud_=solicitudR.solicitud
-    let evento="Actualización Solicitud -  Ingreso Pregunta"
+    let evento=`Actualización Solicitud -  Ingreso Pregunta - ${usuario_.nombre}`
     const bitacoraSolicitud = new BitacoraSolicitud({solicitud_ ,evento });
     await bitacoraSolicitud.save();
 
