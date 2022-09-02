@@ -19,7 +19,7 @@ const tareaDocumentosSalidaSolicitudGet = async(req = request, res = response) =
     /*if(tarea_documento===undefined){
         query = { };
     }*/
-    query = { };
+    
 
     const [ total, tarea_documentos_salida_solicitud ] = await Promise.all([
         TareaDocumentosSalidaSolicitud.countDocuments(query),
