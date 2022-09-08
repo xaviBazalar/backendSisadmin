@@ -184,15 +184,17 @@ const solicitudesPut = async(req, res = response) => {
             bko:bko
         } 
 
+        const dataES= await EstadoSolicitud.findById(mongoose.Types. ObjectId(estado_solicitud))
         const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
-        evento=`Actualización Solicitud - Estado Solicitud - ${usuario_.nombre}`
+        evento=`Actualización Estado Solicitud - ${dataES.nombre_estado} - ${usuario_.nombre}`
     }else{
         dataUpdate={
             _id:id,
             estado_resultado:estado_resultado,
         } 
+        const dataER= await EstadoResultado.findById(mongoose.Types. ObjectId(estado_resultado))
         const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
-        evento=`Actualización Solicitud - Estado Resultado - ${usuario_.nombre}`
+        evento=`Actualización Estado Resultado - ${dataER.nombre_resultado}- ${usuario_.nombre}`
     }
 
     const solicitud = await Solicitud.findByIdAndUpdate( id, dataUpdate );

@@ -7,12 +7,13 @@ const mongoose = require('mongoose');
 const HistorialResultadoSolicitud = require("../models/historialResultadoSolicitud")
 const DocumentoSalida = require('../models/documentoSalida');
 const Tarea= require('../models/tarea')
+const Contrato= require('../models/contrato')
 const TareaDocumentosSalida = require('../models/tareaDocumentoSalida')
 
 const tareaDocumentosSalidaGet = async(req = request, res = response) => {
 
-    const { tarea } = req.query;
-    let query = {"tarea":mongoose.Types. ObjectId(tarea)}   ;
+    const { tarea,contrato } = req.query;
+    let query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     
     if(tarea===undefined){
         query = { };
@@ -22,7 +23,8 @@ const tareaDocumentosSalidaGet = async(req = request, res = response) => {
         TareaDocumentosSalida.countDocuments(query),
         TareaDocumentosSalida.find(query).
         populate( { path: "tarea",model:Tarea}).
-        populate( { path: "documento_salida",model:DocumentoSalida })
+        populate( { path: "documento_salida",model:DocumentoSalida }).
+        populate( { path: "contrato",model:Contrato })
     ]);
 
     res.json({

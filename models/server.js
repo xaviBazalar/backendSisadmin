@@ -31,6 +31,7 @@ class Server {
         this.gestionSolicitudPatch='/api/gestionSolicitud'
         this.notificacionUsuarioPatch='/api/notificacionesUsuario'
         this.perfilesPatch='/api/perfiles'
+        this.contratosGerenciaPatch='/api/contratosGerencia'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -92,6 +93,7 @@ class Server {
         this.app.use( this.gestionSolicitudPatch, require('../routes/gestionSolicitud'))
         this.app.use( this.notificacionUsuarioPatch, require('../routes/notificacionesUsuario'))
         this.app.use( this.perfilesPatch, require('../routes/perfiles'))
+        this.app.use( this.contratosGerenciaPatch, require('../routes/contratosGerencia'))
     }
 
     listen() {

@@ -5,6 +5,7 @@ const DocumentacionSolicitudSchema = Schema({
     nombre_documento: {
         type: String
     },
+    contrato: { type: Schema.ObjectId, ref: "contrato" },
     estado: {
         type: String
     },

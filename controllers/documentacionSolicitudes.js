@@ -6,12 +6,13 @@ const mongoose = require('mongoose');
 
 
 const Tarea= require('../models/tarea')
+const Contrato= require('../models/contrato')
 const DocumentacionSolicitud = require('../models/documentacionSolicitud')
 
 const documentacionSolicitudGet = async(req = request, res = response) => {
 
-    const { tarea } = req.query;
-    let query = {"tarea":mongoose.Types. ObjectId(tarea)}   ;
+    const { tarea,contrato } = req.query;
+    let query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     
     if(tarea===undefined){
         query = { };
@@ -21,7 +22,8 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
     const [ total, documentacion_solicitudes ] = await Promise.all([
         DocumentacionSolicitud.countDocuments(query),
         DocumentacionSolicitud.find(query).
-        populate( { path: "tarea",model:Tarea})
+        populate( { path: "tarea",model:Tarea}).
+        populate( { path: "contrato",model:Contrato})
         //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);
 
