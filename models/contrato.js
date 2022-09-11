@@ -1,14 +1,11 @@
 const { Schema, model } = require('mongoose');
 
 const ContratoSchema = Schema({
-   
     contradoid: {
-        type: String,
-        default: true
+        type: String
     },
     contrato: {
-        type: String,
-        default: true
+        type: String
     },
     gerencia: { type: Schema.ObjectId, ref: "gerencia" }
 },

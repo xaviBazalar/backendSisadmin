@@ -31,6 +31,19 @@ const contratosGet = async(req = request, res = response) => {
     });*/
 }
 
+const contratosPost = async(req, res = response) => {
+
+    const { contradoid,  contrato} = req.body;
+    const contrato_ = new Contrato({ contradoid, contrato });
+
+    // Guardar en BD
+    await contrato_.save();
+
+    res.json({
+        contrato_
+    });
+}
+
 
 const contratosPatch = (req, res = response) => {
     res.json({
@@ -42,5 +55,6 @@ const contratosPatch = (req, res = response) => {
 
 module.exports = {
     contratosGet,
+    contratosPost,
     contratosPatch,
 }

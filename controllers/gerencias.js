@@ -15,8 +15,7 @@ const gerenciaGet = async(req = request, res = response) => {
     const [ total, gerencias ] = await Promise.all([
             Gerencia.countDocuments(query),
             Gerencia.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
+
     ]);
 
     res.json({
@@ -25,22 +24,19 @@ const gerenciaGet = async(req = request, res = response) => {
     });
 }
 
-// const usuariosPost = async(req, res = response) => {
-    
-//     const { nombre, correo, password, rol } = req.body;
-//     const usuario = new Usuario({ nombre, correo, password, rol });
+const gerenciaPost = async(req, res = response) => {
 
-//     // Encriptar la contraseña
-//     const salt = bcryptjs.genSaltSync();
-//     usuario.password = bcryptjs.hashSync( password, salt );
+    const { nombre_gerencia,estado } = req.body;
+    const gerencia = new Gerencia({ nombre_gerencia, estado });
 
-//     // Guardar en BD
-//     await usuario.save();
+    // Guardar en BD
+    await gerencia.save();
 
-//     res.json({
-//         usuario
-//     });
-// }
+    res.json({
+        gerencia
+    });
+
+}
 
 // const usuariosPut = async(req, res = response) => {
 
@@ -89,12 +85,7 @@ const gerenciaPatch = (req, res = response) => {
 
 module.exports = {
     gerenciaGet,
+    gerenciaPost,
     gerenciaPatch
-   
 
-    // usuariosGet,
-    // usuariosPost,
-    // usuariosPut,
-    // usuariosPatch,
-    // usuariosDelete,
 }

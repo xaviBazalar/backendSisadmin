@@ -12,10 +12,12 @@ const DocumentacionSolicitud = require('../models/documentacionSolicitud')
 const documentacionSolicitudGet = async(req = request, res = response) => {
 
     const { tarea,contrato } = req.query;
-    let query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
+    let query = {}   ;
     
     if(tarea===undefined){
         query = { };
+    }else if(tarea!=""){
+        query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
     
 
@@ -35,7 +37,15 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
 
 const documentacionSolicitudPost = async(req, res = response) => {
 
+    const { tarea,nombre_documento,contrato,estado,observacion } = req.body;
+    const documentacion_solicitud= new DocumentacionSolicitud({ tarea, nombre_documento, contrato, estado, observacion });
 
+    // Guardar en BD
+    await documentacion_solicitud.save();
+
+    res.json({
+        documentacion_solicitud
+    });
 }
 
 const documentacionSolicitudPut = async(req, res = response) => {

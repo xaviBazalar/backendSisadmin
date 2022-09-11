@@ -3,13 +3,14 @@ const { Schema, model } = require('mongoose');
 
 const TareaSchema = Schema({
     nombre_tarea: {
-        type: String,
-        default: true
+        type: String
     },
     
     frecuencia:{
-        type: String,
-        default: true
+        type: String
+    },
+    SLA:{
+        type: String
     },
     estado: {
         type: Boolean,

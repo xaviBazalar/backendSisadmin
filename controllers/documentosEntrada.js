@@ -21,6 +21,19 @@ const documentosEntradaGet = async(req = request, res = response) => {
     });
 }
 
+const documentosEntradaPost = async(req, res = response) => {
+
+    const { tipo_documento,requerido,descripcion } = req.body;
+    const documento_entrada = new DocumentoEntrada({ tipo_documento,requerido, descripcion });
+
+    // Guardar en BD
+    await documento_entrada.save();
+
+    res.json({
+        documento_entrada
+    });
+
+}
 
 
 const documentosEntradaPatch = (req, res = response) => {
@@ -32,5 +45,6 @@ const documentosEntradaPatch = (req, res = response) => {
 
 module.exports = {
     documentosEntradaGet,
+    documentosEntradaPost,
     documentosEntradaPatch,
 }

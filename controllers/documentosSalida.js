@@ -21,6 +21,19 @@ const documentosSalidaGet = async(req = request, res = response) => {
     });
 }
 
+const documentosSalidaPost = async(req, res = response) => {
+
+    const { tipo_documento,requerido,descripcion } = req.body;
+    const documento_salida = new DocumentoSalida({ tipo_documento,requerido, descripcion });
+
+    // Guardar en BD
+    await documento_salida.save();
+
+    res.json({
+        documento_salida
+    });
+
+}
 
 
 const documentosSalidaPatch = (req, res = response) => {
@@ -32,5 +45,6 @@ const documentosSalidaPatch = (req, res = response) => {
 
 module.exports = {
     documentosSalidaGet,
+    documentosSalidaPost,
     documentosSalidaPatch,
 }

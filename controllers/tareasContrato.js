@@ -9,27 +9,37 @@ const TareaContrato = require('../models/tareaContrato');
 const tareasContratoGet = async(req = request, res = response) => {
  
     const {contrato} = req.query;
-    const query = { contrato:contrato};
+    let query = { contrato:contrato};
+    if(contrato==""){
+        query = {}
+    }
 
-    /*const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite )).populate( { path: "rol" })
-    ]);*/
+    const [ total, contratos ] = await Promise.all([
+        TareaContrato.countDocuments(query),
+        TareaContrato.find(query).
+        populate( { path: "tarea",model:Tarea}).
+        populate( { path: "contrato",model:Contrato}).sort('contrato')
+    ]);
 
-    TareaContrato.find(query, function (err, tareas) {
-        Tarea.populate(tareas, { path: "tarea" }, function (err, tareas) {
-          res.json({
-            tareas,
-            });
-        });
-      });
 
-    /*res.json({
-    total,
-        usuarios
-    });*/
+    res.json({
+        total,
+        contratos
+    });
+
+}
+
+const tareasContratoPost = async(req, res = response) => {
+
+    const { tarea,  contrato} = req.body;
+    const tarea_contrato = new TareaContrato({ tarea, contrato });
+
+    // Guardar en BD
+    await tarea_contrato.save();
+
+    res.json({
+        tarea_contrato
+    });
 }
 
 
@@ -43,5 +53,6 @@ const tareasContratoPatch = (req, res = response) => {
 
 module.exports = {
     tareasContratoGet,
+    tareasContratoPost,
     tareasContratoPatch,
 }

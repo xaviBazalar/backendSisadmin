@@ -12,10 +12,12 @@ const ContratoGerencia = require('../models/contratoGerencia')
 const contratosGerenciaGet = async(req = request, res = response) => {
 
     const { gerencia } = req.query;
-    let query = {"gerencia":mongoose.Types. ObjectId(gerencia)}   ;
+    let query = {}   ;
     
     if(gerencia===undefined){
         query = { };
+    }else if(gerencia!=""){
+        query = {"gerencia":mongoose.Types. ObjectId(gerencia)}   ;
     }
     
 
@@ -23,7 +25,7 @@ const contratosGerenciaGet = async(req = request, res = response) => {
         ContratoGerencia.countDocuments(query),
         ContratoGerencia.find(query).
         populate( { path: "contrato",model:Contrato}).
-        populate( { path: "gerencia",model:Gerencia})
+        populate( { path: "gerencia",model:Gerencia}).sort('contrato')
         //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);
 
@@ -34,22 +36,15 @@ const contratosGerenciaGet = async(req = request, res = response) => {
 }
 
 const contratosGerenciaPost = async(req, res = response) => {
-    /*const { solicitud,documentacion_solicitud,validado,estado,observacion,solicitante} = req.body;
-    const gestionSolicitud = new GestionSolicitud({ solicitud, documentacion_solicitud,validado, estado, observacion});
+    const { gerencia,contrato } = req.body;
+    const contrato_gerencia= new ContratoGerencia({ gerencia,contrato });
 
     // Guardar en BD
-    await gestionSolicitud.save();
-
-    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
-
-    let solicitud_=solicitud
-    let evento=`Actualización Solicitud -  Ingreso Gestion Solicitud - ${usuario_.nombre}`
-    const bitacoraSolicitud = new BitacoraSolicitud({solicitud_ ,evento });
-    await bitacoraSolicitud.save();
+    await contrato_gerencia.save();
 
     res.json({
-        gestionSolicitud
-    });*/
+        contrato_gerencia
+    });
 }
 
 const contratosGerenciaPut = async(req, res = response) => {

@@ -13,10 +13,12 @@ const TareaDocumentosEntrada = require('../models/tareaDocumentoEntrada')
 const tareaDocumentosEntradaGet = async(req = request, res = response) => {
 
     const { tarea,contrato } = req.query;
-    let query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
+    let query = {}  ;
     
     if(tarea===undefined){
         query = { };
+    }else if(tarea!=""){
+        query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
 
     const [ total, tarea_documentos_entrada ] = await Promise.all([
@@ -24,7 +26,7 @@ const tareaDocumentosEntradaGet = async(req = request, res = response) => {
         TareaDocumentosEntrada.find(query).
         populate( { path: "tarea",model:Tarea}).
         populate( { path: "documento_entrada",model:DocumentoEntrada }).
-        populate( { path: "contrato",model:Contrato })
+        populate( { path: "contrato",model:Contrato }).sort('contrato')
     ]);
 
     res.json({
@@ -35,20 +37,16 @@ const tareaDocumentosEntradaGet = async(req = request, res = response) => {
 
 const tareaDocumentosEntradaPost = async(req, res = response) => {
 
-    /*const [ solicitudes ] = await Promise.all([
-        Solicitud.find().limit(1).sort({$natural:-1})
-    ]);
-
-    let idsecuencia=solicitudes[0].idsecuencia+1
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio} = req.body;
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,idsecuencia });
+    const { tarea,documento_entrada,contrato } = req.body;
+    const tarea_documentos_entrada = new TareaDocumentosEntrada({ tarea,documento_entrada, contrato });
 
     // Guardar en BD
-    await solicitud.save();
+    await tarea_documentos_entrada.save();
 
     res.json({
-        solicitud
-    });*/
+        tarea_documentos_entrada
+    });
+
 }
 
 const tareaDocumentosEntradaPut = async(req, res = response) => {

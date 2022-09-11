@@ -13,10 +13,12 @@ const TareaDocumentosSalida = require('../models/tareaDocumentoSalida')
 const tareaDocumentosSalidaGet = async(req = request, res = response) => {
 
     const { tarea,contrato } = req.query;
-    let query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
+    let query = {}   ;
     
     if(tarea===undefined){
         query = { };
+    }else if(tarea!=""){
+        query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
 
     const [ total, tarea_documentos_salida ] = await Promise.all([
@@ -35,20 +37,15 @@ const tareaDocumentosSalidaGet = async(req = request, res = response) => {
 
 const tareaDocumentosSalidaPost = async(req, res = response) => {
 
-    /*const [ solicitudes ] = await Promise.all([
-        Solicitud.find().limit(1).sort({$natural:-1})
-    ]);
-
-    let idsecuencia=solicitudes[0].idsecuencia+1
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio} = req.body;
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,idsecuencia });
+    const { tarea,documento_salida,contrato } = req.body;
+    const tarea_documentos_salida = new TareaDocumentosSalida({ tarea,documento_salida, contrato });
 
     // Guardar en BD
-    await solicitud.save();
+    await tarea_documentos_salida.save();
 
     res.json({
-        solicitud
-    });*/
+        tarea_documentos_salida
+    });
 }
 
 const tareaDocumentosSalidaPut = async(req, res = response) => {

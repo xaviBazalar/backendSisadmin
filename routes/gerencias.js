@@ -5,13 +5,13 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
 
-const {  gerenciaGet,gerenciaPatch} = require('../controllers/gerencias');
+const {  gerenciaGet,gerenciaPatch, gerenciaPost} = require('../controllers/gerencias');
 
 const router = Router();
 
 
 router.get('/', gerenciaGet );
-
+router.post('/', gerenciaPost )
 /*
 router.put('/:id',[
     check('id', 'No es un ID válido').isMongoId(),
