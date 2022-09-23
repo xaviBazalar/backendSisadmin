@@ -44,6 +44,23 @@ const contratosPost = async(req, res = response) => {
     });
 }
 
+const contratosPut = async(req,res = response) => {
+    //const { id } = req.params;
+    const { id,contradoid,contrato,estado} = req.body;
+
+    const dataUpdate={
+        _id:id,
+        contradoid:contradoid,
+        contrato:contrato,
+        estado:estado
+    }
+
+    const contrato_ = await Contrato.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(contrato_);
+}
+
+
 
 const contratosPatch = (req, res = response) => {
     res.json({
@@ -56,5 +73,6 @@ const contratosPatch = (req, res = response) => {
 module.exports = {
     contratosGet,
     contratosPost,
+    contratosPut,
     contratosPatch,
 }

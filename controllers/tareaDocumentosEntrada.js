@@ -51,7 +51,8 @@ const tareaDocumentosEntradaPost = async(req, res = response) => {
 
 const tareaDocumentosEntradaPut = async(req, res = response) => {
 
-    const { id } = req.params;
+   
+   /* const { id } = req.params;
 
     const { validado, url_ref, observacion } = req.body;
 
@@ -60,6 +61,22 @@ const tareaDocumentosEntradaPut = async(req, res = response) => {
         validado:validado,
         url_ref:url_ref,
         observacion:observacion
+    }
+
+
+    const tareaDocumentoEntrada = await TareaDocumentosEntrada.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(tareaDocumentoEntrada);*/
+   // const { id } = req.params;
+
+    const { id,tarea, documento_entrada, contrato,estado } = req.body;
+
+    const dataUpdate={
+        _id:id,
+        tarea:tarea,
+        documento_entrada:documento_entrada,
+        contrato:contrato,
+        estado:estado
     }
 
 

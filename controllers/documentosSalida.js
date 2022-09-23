@@ -35,6 +35,23 @@ const documentosSalidaPost = async(req, res = response) => {
 
 }
 
+const documentosSalidaPut = async(req,res = response) => {
+    //const { id } = req.params;
+    const { id,tipo_documento,descripcion ,url,estado} = req.body;
+
+    const dataUpdate={
+        _id:id,
+        tipo_documento:tipo_documento,
+        descripcion:descripcion,
+        url:url,
+        estado:estado
+    }
+
+    const documento_salida = await DocumentoSalida.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(documento_salida);
+}
+
 
 const documentosSalidaPatch = (req, res = response) => {
     res.json({
@@ -46,5 +63,6 @@ const documentosSalidaPatch = (req, res = response) => {
 module.exports = {
     documentosSalidaGet,
     documentosSalidaPost,
+    documentosSalidaPut,
     documentosSalidaPatch,
 }

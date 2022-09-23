@@ -9,6 +9,13 @@ const DocumentoSalidaSchema = Schema({
     },
     descripcion: {
         type: String,
+    },
+    url: {
+        type: String,
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
 },
 { 

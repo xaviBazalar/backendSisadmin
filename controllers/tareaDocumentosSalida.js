@@ -50,16 +50,19 @@ const tareaDocumentosSalidaPost = async(req, res = response) => {
 
 const tareaDocumentosSalidaPut = async(req, res = response) => {
 
-    const { id } = req.params;
+    //const { id } = req.params;
 
-    const { validado, url_ref, observacion } = req.body;
+    const { id,tarea, documento_salida, contrato,estado } = req.body;
 
     const dataUpdate={
         _id:id,
-        validado:validado,
-        url_ref:url_ref,
-        observacion:observacion
+        tarea:tarea,
+        documento_salida:documento_salida,
+        contrato:contrato,
+        estado:estado
     }
+
+    console.log(dataUpdate)
 
 
     const tareaDocumentoSalida = await TareaDocumentosSalida.findByIdAndUpdate( id, dataUpdate );

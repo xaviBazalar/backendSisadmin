@@ -7,7 +7,8 @@ const DocumentacionSolicitudSchema = Schema({
     },
     contrato: { type: Schema.ObjectId, ref: "contrato" },
     estado: {
-        type: String
+        type: Boolean,
+        default: true
     },
     observacion: {
         type: String

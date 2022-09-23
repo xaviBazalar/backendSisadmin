@@ -12,6 +12,10 @@ const TareaDocumentoSalidaSchema = Schema({
     },
     observacion:{
         type: String
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
 },
 { 

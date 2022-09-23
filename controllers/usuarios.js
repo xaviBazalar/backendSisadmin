@@ -52,8 +52,27 @@ const usuariosPost = async(req, res = response) => {
 }
 
 const usuariosPut = async(req, res = response) => {
+    const { id,nombre,correo,login ,password,estado,perfil,autorizar} = req.body;
 
-    const { id } = req.params;
+    const dataUpdate={
+        _id:id,
+        nombre:nombre,
+        correo:correo,
+        login:login,
+        estado:estado,
+        perfil:perfil,
+        autorizar:autorizar,
+    }
+
+    if(password!==undefined & password!=""){
+        dataUpdate.password=password
+    }
+
+
+    const usuario = await Usuario.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(usuario);
+    /*const { id } = req.params;
     const { _id, password, google, correo, ...resto } = req.body;
 
     if ( password ) {
@@ -64,7 +83,7 @@ const usuariosPut = async(req, res = response) => {
 
     const usuario = await Usuario.findByIdAndUpdate( id, resto );
 
-    res.json(usuario);
+    res.json(usuario);*/
 }
 
 const usuariosPatch = (req, res = response) => {

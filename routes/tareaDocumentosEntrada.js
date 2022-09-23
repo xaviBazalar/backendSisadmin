@@ -11,7 +11,7 @@ router.post('/', tareaDocumentosEntradaPost );
 
 router.patch('/', tareaDocumentosEntradaPatch );
 
-router.put('/:id',tareaDocumentosEntradaPut );
+router.put('/',tareaDocumentosEntradaPut );
 
 
 module.exports = router;

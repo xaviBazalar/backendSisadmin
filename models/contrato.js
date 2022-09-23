@@ -7,7 +7,11 @@ const ContratoSchema = Schema({
     contrato: {
         type: String
     },
-    gerencia: { type: Schema.ObjectId, ref: "gerencia" }
+    gerencia: { type: Schema.ObjectId, ref: "gerencia" },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 },
 { 
     collection : 'contratos' 

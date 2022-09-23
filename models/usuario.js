@@ -24,7 +24,11 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: true
     },
-    perfil: { type: Schema.ObjectId, ref: "perfil" }
+    perfil: { type: Schema.ObjectId, ref: "perfil" },
+    autorizar: {
+        type: Boolean,
+        default: true
+    },
     /*,
     google: {
         type: Boolean,
@@ -35,7 +39,7 @@ const UsuarioSchema = Schema({
 
 
 UsuarioSchema.methods.toJSON = function() {
-    const { __v, password, ...usuario  } = this.toObject();
+    const { __v, ...usuario  } = this.toObject();//password,
     return usuario;
 }
 

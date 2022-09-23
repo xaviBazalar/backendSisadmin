@@ -22,7 +22,7 @@ const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
     
-    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko} = req.query;
+    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko,fecha_solicitud,fecha_inicio,fecha_entrega} = req.query;
     let query = { _id:id };
     if(id===undefined){
         query = { };
@@ -74,6 +74,18 @@ const solicitudesGet = async(req = request, res = response) => {
 
     if(id===undefined & estado_resultado!="" & estado_resultado!==undefined){
         query.estado_resultado=estado_resultado
+    }
+
+    if(id===undefined & fecha_solicitud!="" & fecha_solicitud!==undefined){
+        query.fecha_solicitud=fecha_solicitud
+    }
+
+    if(id===undefined & fecha_inicio!="" & fecha_inicio!==undefined){
+        query.fecha_inicio=fecha_inicio
+    }
+
+    if(id===undefined & fecha_entrega!="" & fecha_entrega!==undefined){
+        query.fecha_entrega=fecha_entrega
     }
 
     //console.log(query)

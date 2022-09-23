@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/', contratosGerenciaGet );
 
-router.put('/:id',contratosGerenciaPut );
+router.put('/',contratosGerenciaPut );
 
 router.post('/', contratosGerenciaPost );
 

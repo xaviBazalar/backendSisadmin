@@ -46,11 +46,26 @@ const documentacionSolicitudPost = async(req, res = response) => {
     res.json({
         documentacion_solicitud
     });
+
+    
 }
 
 const documentacionSolicitudPut = async(req, res = response) => {
 
-    const { id } = req.params;
+    const { id,tarea,nombre_documento ,contrato,estado,observacion} = req.body;
+
+    const dataUpdate={
+        _id:id,
+        tarea:tarea,
+        nombre_documento:nombre_documento,
+        contrato:contrato,
+        estado:estado,
+        observacion:observacion
+    }
+
+    const documentacion_solicitud = await DocumentacionSolicitud.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(documentacion_solicitud);
 
 }
 

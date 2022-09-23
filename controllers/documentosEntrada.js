@@ -23,8 +23,8 @@ const documentosEntradaGet = async(req = request, res = response) => {
 
 const documentosEntradaPost = async(req, res = response) => {
 
-    const { tipo_documento,requerido,descripcion } = req.body;
-    const documento_entrada = new DocumentoEntrada({ tipo_documento,requerido, descripcion });
+    const { tipo_documento,requerido,descripcion,url } = req.body;
+    const documento_entrada = new DocumentoEntrada({ tipo_documento,requerido, descripcion,url });
 
     // Guardar en BD
     await documento_entrada.save();
@@ -34,6 +34,24 @@ const documentosEntradaPost = async(req, res = response) => {
     });
 
 }
+
+const documentosEntradaPut = async(req,res = response) => {
+    //const { id } = req.params;
+    const { id,tipo_documento,descripcion ,url,estado} = req.body;
+
+    const dataUpdate={
+        _id:id,
+        tipo_documento:tipo_documento,
+        descripcion:descripcion,
+        url:url,
+        estado:estado
+    }
+
+    const documento_entrada = await DocumentoEntrada.findByIdAndUpdate( id, dataUpdate );
+
+    res.json(documento_entrada);
+}
+
 
 
 const documentosEntradaPatch = (req, res = response) => {
@@ -46,5 +64,6 @@ const documentosEntradaPatch = (req, res = response) => {
 module.exports = {
     documentosEntradaGet,
     documentosEntradaPost,
+    documentosEntradaPut,
     documentosEntradaPatch,
 }

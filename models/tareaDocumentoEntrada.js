@@ -4,6 +4,10 @@ const TareaDocumentoEntradaSchema = Schema({
     tarea: { type: Schema.ObjectId, ref: "tarea" },
     documento_entrada: { type: Schema.ObjectId, ref: "documento_entrada" },
     contrato: { type: Schema.ObjectId, ref: "contrato" },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 },
 { 
     collection : 'tarea_documentos_entrada' 

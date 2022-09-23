@@ -49,28 +49,18 @@ const contratosGerenciaPost = async(req, res = response) => {
 
 const contratosGerenciaPut = async(req, res = response) => {
 
-    /*const { id } = req.params;
-    const { validado,estado,observacion,solicitud,solicitante} = req.body;
-
-    const dataUpdate={
-        _id:id,
-        validado:validado,
-        estado:estado,
-        observacion:observacion,
-    }
-
-    const gestionSolicitud = await GestionSolicitud.findByIdAndUpdate( id, dataUpdate );
-
-    const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
-
-
-    let solicitud_=solicitud
-    let evento=`Actualización Solicitud -  Update Gestion Solicitud - ${usuario_.nombre}`
-    const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
-    await bitacoraSolicitud.save();
-
-    res.json(gestionSolicitud);
-    */
+    const { id,gerencia,contrato,estado} = req.body;
+    
+        const dataUpdate={
+            _id:id,
+            gerencia:gerencia,
+            contrato:contrato,
+            estado:estado
+        }
+    
+        const contrato_gerencia = await ContratoGerencia.findByIdAndUpdate( id, dataUpdate );
+    
+        res.json(contrato_gerencia);
 }
 
 const contratosGerenciaPatch = (req, res = response) => {

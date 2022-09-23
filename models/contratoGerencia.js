@@ -3,6 +3,10 @@ const { Schema, model } = require('mongoose');
 const ContratoGerenciaSchema = Schema({
     gerencia: { type: Schema.ObjectId, ref: "gerencia" },
     contrato: { type: Schema.ObjectId, ref: "contratos" },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 },
 { 
     collection : 'contratos_gerencia' 
