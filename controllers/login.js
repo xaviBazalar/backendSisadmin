@@ -10,7 +10,7 @@ const Perfil = require('../models/perfil.js');
 const loginPost = async(req, res = response) => {
     
     const { login, password } = req.body;
-    const query = { login: login,password:password };
+    const query = { login: login,password:password,estado:true };
  
     Usuario.find(query, function (err, usuarios) {
         Perfil.populate(usuarios, { path: "perfil" }, function (err, usuarios) {

@@ -8,9 +8,11 @@ const Gerencia = require('../models/gerencia');
 
 const gerenciaGet = async(req = request, res = response) => {
 
-    const { limite = 8, desde = 0 } = req.query;
+    const { limite = 8, desde = 0, estado="" } = req.query;
     const query = {  };//estado: true
-
+    if(estado!==undefined && estado!=""){
+        query.estado=true
+    }
 
     const [ total, gerencias ] = await Promise.all([
             Gerencia.countDocuments(query),

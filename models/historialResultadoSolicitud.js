@@ -35,6 +35,10 @@ const HistorialResultadoSolicitudSchema = Schema({
         type: String,
         default:""
     },
+    url_file_pregunta: {
+        type: String,
+        default:""
+    },
     usuario_respuesta: { type: Schema.ObjectId, ref: "usuarios" },
 },
 { 

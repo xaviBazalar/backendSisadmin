@@ -79,8 +79,8 @@ const getFecRegistro=()=>{
 
 const historialResultadoSolicitudPost = async(req, res = response) => {
     let fecha_registro=getFecRegistro()
-    const { solicitud,estado_resultado,usuario,mensaje,usuario_asignado,solicitante} = req.body;
-    const solicitudR = new HistorialResultadoSolicitud({ solicitud, estado_resultado,fecha_registro, usuario, mensaje});
+    const { solicitud,estado_resultado,usuario,mensaje,usuario_asignado,solicitante,url_file_pregunta} = req.body;
+    const solicitudR = new HistorialResultadoSolicitud({ solicitud, estado_resultado,fecha_registro, usuario, mensaje,url_file_pregunta});
 
     // Guardar en BD
     await solicitudR.save();

@@ -11,13 +11,17 @@ const ContratoGerencia = require('../models/contratoGerencia')
 
 const contratosGerenciaGet = async(req = request, res = response) => {
 
-    const { gerencia } = req.query;
+    const { gerencia,estado="" } = req.query;
     let query = {}   ;
     
     if(gerencia===undefined){
         query = { };
     }else if(gerencia!=""){
         query = {"gerencia":mongoose.Types. ObjectId(gerencia)}   ;
+    }
+
+    if(estado!==undefined && estado!=""){
+        query.estado=true
     }
     
 

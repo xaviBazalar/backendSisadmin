@@ -7,8 +7,12 @@ const Gerencia = require('../models/gerencia');
 
 const contratosGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
+    const { limite = 5, desde = 0,estado="" } = req.query;
     const query = { };
+
+    if(estado!==undefined && estado!=""){
+        query.estado=true
+    }
 
     /*const [ total, usuarios ] = await Promise.all([
         Usuario.countDocuments(query),
@@ -17,7 +21,7 @@ const contratosGet = async(req = request, res = response) => {
             .limit(Number( limite )).populate( { path: "rol" })
     ]);*/
 
-    Contrato.find({}, function (err, contratos) {
+    Contrato.find(query, function (err, contratos) {
         Gerencia.populate(contratos, { path: "gerencia" }, function (err, contratos) {
           res.json({
                 contratos,

@@ -13,7 +13,11 @@ const tareasContratoGet = async(req = request, res = response) => {
     let query = { contrato:contrato};
     if(contrato==""){
         query = {}
+    }else{
+        query.estado=true
     }
+
+
 
     const [ total, contratos ] = await Promise.all([
         TareaContrato.countDocuments(query),
