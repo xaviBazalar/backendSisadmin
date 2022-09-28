@@ -177,7 +177,7 @@ const solicitudesPut = async(req, res = response) => {
 
     const { id } = req.params;
 
-    const { estado_solicitud, fecha_inicio, fecha_solicitud, gst, bko,estado_resultado,ingresado,solicitante } = req.body;
+    const { estado_solicitud, fecha_inicio, fecha_entrega, gst, bko,estado_resultado,ingresado,solicitante } = req.body;
     let dataUpdate;
     let evento;
 
@@ -191,7 +191,7 @@ const solicitudesPut = async(req, res = response) => {
             _id:id,
             estado_solicitud:estado_solicitud,
             fecha_inicio:fecha_inicio,
-            fecha_solicitud:fecha_solicitud,
+            fecha_entrega:fecha_entrega,
             gst:gst,
             bko:bko
         } 
