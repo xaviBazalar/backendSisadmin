@@ -9,30 +9,38 @@ const NotificacionUsuario= require('../models/notificacionUsuario')
 const Usuario= require('../models/usuario')
 
 const notificacionUsuarioGet = async(req = request, res = response) => {
+    try {
+        const { usuario,visto } = req.query;
+        let query = {"usuario":mongoose.Types. ObjectId(usuario),"visto": (visto=="true")?true:false}   ;
+        
+        if(usuario===undefined || usuario=="undefined"){
+            query = { };
+        }
 
-    const { usuario,visto } = req.query;
-    let query = {"usuario":mongoose.Types. ObjectId(usuario),"visto": (visto=="true")?true:false}   ;
+        if(visto=="true"){
+            query = {"usuario":mongoose.Types. ObjectId(usuario)}   ;
+        }
+
+        console.log(query)
+
+        const [ total, notificaciones_usuario ] = await Promise.all([
+            NotificacionUsuario.countDocuments(query),
+            NotificacionUsuario.find(query).
+            populate( { path: "usuario",model:Usuario})
+        ]);
+
+        res.json({
+            total,
+            notificaciones_usuario
+        });
+        
+    } catch (error) {
+        res.json({
+            msg: 'patch API - usuariosPatch'
+        });
+    }
+
     
-    if(usuario===undefined || usuario=="undefined"){
-        query = { };
-    }
-
-    if(visto=="true"){
-        query = {"usuario":mongoose.Types. ObjectId(usuario)}   ;
-    }
-
-    console.log(query)
-
-    const [ total, notificaciones_usuario ] = await Promise.all([
-        NotificacionUsuario.countDocuments(query),
-        NotificacionUsuario.find(query).
-        populate( { path: "usuario",model:Usuario})
-    ]);
-
-    res.json({
-        total,
-        notificaciones_usuario
-    });
 }
 
 const notificacionUsuarioPost = async(req, res = response) => {
