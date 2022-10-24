@@ -12,6 +12,8 @@ const dbConnection = async() => {
             useCreateIndex: true,
             useFindAndModify: false
         });
+
+        mongoose.connection.useDb('sisadmin'); 
     
         console.log('Base de datos online');
 
