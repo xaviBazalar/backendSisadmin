@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const Contrato= require('../models/contrato')
 const Gerencia = require('../models/gerencia')
+const Usuario = require('../models/usuario')
 const BitacoraSolicitud = require('../models/bitacora_solicitud')
 const ContratoGerencia = require('../models/contratoGerencia')
 
@@ -28,7 +29,7 @@ const contratosGerenciaGet = async(req = request, res = response) => {
     const [ total, contratos_gerencia ] = await Promise.all([
         ContratoGerencia.countDocuments(query),
         ContratoGerencia.find(query).
-        populate( { path: "contrato",model:Contrato}).
+        populate( { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}}).
         populate( { path: "gerencia",model:Gerencia}).sort('contrato')
         //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);

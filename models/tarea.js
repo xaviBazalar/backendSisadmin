@@ -1,5 +1,6 @@
 
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const TareaSchema = Schema({
     nombre_tarea: {
@@ -22,6 +23,7 @@ const TareaSchema = Schema({
 });
 
 
+TareaSchema.plugin(mongoosePaginate)
 
 TareaSchema.methods.toJSON = function() {
     const { __v, ...tarea  } = this.toObject();

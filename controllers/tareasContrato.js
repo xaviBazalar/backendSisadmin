@@ -9,14 +9,16 @@ const Usuario = require('../models/usuario')
 
 const tareasContratoGet = async(req = request, res = response) => {
  
-    const {contrato} = req.query;
+    const {contrato,n_contrato} = req.query;
+
     let query = { contrato:contrato};
-    if(contrato==""){
+
+    
+    if(contrato=="" ){
         query = {}
     }else{
         query.estado=true
     }
-
 
 
     const [ total, contratos ] = await Promise.all([

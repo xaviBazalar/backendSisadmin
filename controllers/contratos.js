@@ -4,15 +4,31 @@ const bcryptjs = require('bcryptjs');
 
 const Contrato = require('../models/contrato');
 const Gerencia = require('../models/gerencia');
+const Usuario = require('../models/usuario');
+
+
 
 const contratosGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0,estado="" } = req.query;
-    const query = { };
+    const { limite = 5, desde = 0,estado="",page=1,n_contrato="",nro_contrato="" } = req.query;
+    let query = {};//contrato:{$regex:'.*K,*'}
+
 
     if(estado!==undefined && estado!=""){
         query.estado=true
     }
+
+    if(n_contrato!=""){
+        query.contrato={$regex:`.*${n_contrato},*`};//
+    }
+
+    if(nro_contrato!=""){
+        query.contradoid={$regex:`.*${nro_contrato},*`};//
+    }
+   
+
+    console.log(query)
+    
 
     /*const [ total, usuarios ] = await Promise.all([
         Usuario.countDocuments(query),
@@ -21,24 +37,38 @@ const contratosGet = async(req = request, res = response) => {
             .limit(Number( limite )).populate( { path: "rol" })
     ]);*/
 
-    Contrato.find(query, function (err, contratos) {
+    /*Contrato.find(query, function (err, contratos) {
         Gerencia.populate(contratos, { path: "gerencia" }, function (err, contratos) {
           res.json({
                 contratos,
             });
         });
-      });
+      });*/
+      const options = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "gerencia",model:Gerencia},
+            { path: "adc",model:Usuario}
+        ]
+      };
 
-    /*res.json({
-    total,
-        usuarios
-    });*/
+
+    const [ total, contratos ] = await Promise.all([
+        Contrato.countDocuments(query),
+        Contrato.paginate(query,options)
+    ]);
+
+    res.json({
+        total,
+        contratos
+    });
 }
 
 const contratosPost = async(req, res = response) => {
 
-    const { contradoid,  contrato} = req.body;
-    const contrato_ = new Contrato({ contradoid, contrato });
+    const { contradoid,  contrato, adc} = req.body;
+    const contrato_ = new Contrato({ contradoid, contrato, adc });
 
     // Guardar en BD
     await contrato_.save();
@@ -50,13 +80,14 @@ const contratosPost = async(req, res = response) => {
 
 const contratosPut = async(req,res = response) => {
     //const { id } = req.params;
-    const { id,contradoid,contrato,estado} = req.body;
+    const { id,contradoid,contrato,estado,adc} = req.body;
 
     const dataUpdate={
         _id:id,
         contradoid:contradoid,
         contrato:contrato,
-        estado:estado
+        estado:estado,
+        adc:adc
     }
 
     const contrato_ = await Contrato.findByIdAndUpdate( id, dataUpdate );

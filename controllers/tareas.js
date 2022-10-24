@@ -8,12 +8,22 @@ const Tarea = require('../models/tarea');
 
 const tareasGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
-    const query = {  };//estado: true
+    const { limite = 5, desde = 0,page=1,nombre_tarea="" } = req.query;
+    let query = {  };//estado: true
+
+    const options = {
+        page: page,
+        limit: 10,
+      };
+
+    if(nombre_tarea!=""){
+        query.nombre_tarea={$regex:`.*${nombre_tarea},*`};//
+    }
+
 
     const [ total, tareas ] = await Promise.all([
         Tarea.countDocuments(query),
-        Tarea.find(query)
+        Tarea.paginate(query,options)
     ]);
 
     res.json({
