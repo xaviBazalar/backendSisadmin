@@ -1,0 +1,168 @@
+﻿ID;Tipo;SKU;Nombre
+97;variable;;Bonito Fresco 2
+99;variation;59;Bonito Fresco - Entero Eviscerado
+104;variable;;Caballa
+111;variable;81;Calamar
+114;variation;;Calamar - Limpio
+115;variation;;Calamar - Cortado para ceviche o chicharrón
+116;variable;80;Camarones
+117;variation;;Camarones - Grandes
+119;variable;44;Cojinova
+121;variation;;Cojinova - Entera Eviscerada
+122;variation;;Cojinova - Filete con piel
+123;variation;;Cojinova - Picado para Ceviche
+125;variable;;Corvina
+130;variation;41;Corvina - Filetes sin piel
+131;variation;42;Corvina - Picado para Ceviche
+132;variable;79;Conchas de Abanico
+133;variation;;Conchas de Abanico - Limpias en su valva
+135;variable;;Jurel
+136;variation;46;Jurel - Entero eviscerado
+143;variable;;Lenguado
+144;variable;;Mero rojo
+145;variable;31;Perico
+146;variable;103;Pez espada congelado
+147;variable;78;Pota
+794;variation;53;Caballa - Lomos con piel
+891;variation;;Pota - Tiras para ceviche o chicharrón
+895;variation;;Pez espada congelado - Filete para freir
+897;variation;;Pez espada congelado - Picado para ceviche
+899;variation;;Perico - Filete de perico sin piel
+910;variation;33;Mero rojo - Picado para ceviche
+911;variation;34;Mero rojo - Filete para freir
+914;variation;38;Lenguado - Filetes sin piel
+916;variation;39;Lenguado - Cubos para ceviche
+1585;variable;77;Langostinos
+1901;variable;;Chita
+1902;variation;29;Chita - Entera eviscerada
+1906;variation;30;Chita - Filete para freir
+1915;variable;27;Cabrilla
+1921;variation;;Cabrilla - Filete para freír
+1922;variation;;Cabrilla - Entera eviscerada
+3772;simple;102;Tilapia congelada
+3774;simple;111;Bonito en conserva
+3799;variation;358;Langostinos - Enteros
+4117;variable;101;Tollo diamante congelado
+4118;variation;;Tollo diamante congelado - Filete para freír
+4572;variable;76;Pulpo
+4574;variation;;Pulpo - Entero eviscerado
+4577;simple;75;Cangrejo moro
+6285;variable;6;Charela congelada
+6293;variation;;Charela congelada - Filete de charela
+7358;simple;26;Salmón
+7360;simple;74;Vongoles
+7869;variable;25;Fortuno congelado
+7870;simple;24;Tramboyo
+7871;simple;66;Pack ceviche carretillero 1
+7873;simple;65;"Pack ""Ceviche Carretillero 2"""
+7960;simple;73;Choros
+7965;variation;;Charela congelada - Charela entera
+8260;simple;23;Lisa
+8439;simple;72;Mixtura de mariscos
+8447;variation;43;Corvina - Entera
+8448;variation;37;Lenguado - Entero
+8667;simple;32;Palabritas
+8681;simple;117;Pack Sudado - Chilcano de Bonito
+9021;simple;22;Pejerrey
+9137;simple;21;Pez diablo
+9268;simple;41;Golden Spirit - Oveja Negra
+9271;simple;40;Beso de Judas
+9355;simple;110;Caballa en conserva
+9421;simple;20;Cachema
+9433;simple;99;Pulpa de cangrejo premium precocida congelada
+9435;variable;98;Uña de cangrejo precocida congelada
+9561;simple;116;Pack Sudado de Cabrilla
+9670;simple;42;Juve & Camps Cinta Púrpura
+9690;simple;43;Terranoble Sauvignon Blanc
+9692;simple;44;Tarima Mediterráneo
+9694;simple;45;The Stump Jump Chardonnay
+9696;simple;46;Cool Coast Sauvignon Blanc
+9698;simple;47;Cadus Chardonnay Vista Flores
+9700;simple;48;Terra Noble Reserva Carmenére
+9702;simple;49;Loma Negra Pinot Noir Gran Reserva
+9956;simple;97;Pack collar de charela congelado
+9963;simple;96;Collar de mero congelado
+10425;simple;95;Pack collar de corvina congelado
+10628;simple;19;Huevera
+11148;simple;54;Funky Brutus
+11151;simple;55;Ska Brutus
+11153;simple;56;Hard Punk Brutus
+11155;simple;57;Heavy Ale Brutus
+11270;simple;P005;Pack ceviche carretillero cervecero
+11440;variation;62;Bonito Fresco - Lomos sin piel
+11441;variation;59;Bonito Fresco - Porciones sin piel y sin espinas
+12330;simple;71;Almejas
+12559;simple;18;Chiri
+12623;simple;70;Langosta
+13077;simple;P006;Pack afrodisiaco
+13666;variable;;Congrio
+13755;simple;VCT1;Vale de consumo TuPesca
+14008;simple;SEV1;Servicio de empaque al vacío
+14369;variable;17;Merluza
+14370;variation;;Merluza - Filete sin piel
+14415;variation;35;Mero rojo - Entero
+14426;variable;;Mero murique
+14427;variation;16;Mero murique - Filete para freír
+14428;variation;15;Mero murique - Entero
+14471;variation;93;Congrio - Filete sin piel
+14472;variation;94;Congrio - Entero
+14487;simple;109;Jurel en conserva
+14489;simple;108;Atún en conserva
+14626;simple;13;Yuyo
+14627;variable;12;Caracol
+14693;simple;107;Mix caja de conservas
+14695;simple;M002;Mix de cervezas
+15708;simple;91;Pack corvina sin piel congelada
+15710;simple;90;Pack corvina con piel congelada
+16538;simple;115;Pack parrilla marina
+17164;simple;89;Pack lomo de bacalao congelado
+17166;simple;88;Trozos de bacalao congelado
+17337;simple;11;Erizo
+18582;simple;359;Pack 20
+18583;simple;105;Pack Mamá
+19102;variable;10;Reineta
+19103;variation;;Reineta - Filete sin piel
+19455;variable;9;Carajito
+19456;variation;;Carajito - Filete sin piel y sin espinas
+19920;variable;;Charela
+19921;variation;7;Charela - Charela entera
+19922;variation;8;Charela - Filete de charela
+19923;variation;51;Jurel - Pack de lomos con piel
+19991;simple;69;Conchas negras
+20052;simple;67;Pack peruano
+20062;simple;P011;Pack congelado
+20231;variation;56;Caballa - Entera eviscerada
+21302;variable;5;Lengüeta
+21303;variation;;Lengüeta - Filete sin piel y sin espinas
+21324;simple;4;Robalo
+21471;simple;74;Volador
+21690;simple;CT01;Caja térmica
+21777;variation;60;Bonito Fresco - Filete con piel
+21877;simple;;Cola negra
+23906;simple;75;Buri
+23907;simple;104;Pack 12
+24602;simple;114;Pack Fiesta 1
+24608;simple;113;Pack Fiesta 2
+27560;simple;;bolsa empacado al vacío individual
+28275;variable;;Bonito congelado
+28279;variation;85;Bonito congelado - Pack trozos de bonito con piel congelado
+28280;variable;83;Jurel congelado
+28281;variation;;Jurel congelado - Pack de lomos de jurel congelado
+28283;variable;82;Caballa Congelada
+28284;variation;;Caballa Congelada - Pack de lomos de caballa
+28292;variation;86;Bonito congelado - Pack de porciones de bonito con piel 1
+28377;variation;87;Bonito congelado - Pack de porciones de bonito con piel 2
+30660;simple;112;"Pack ""Arriba Perú"""
+30734;simple;68;Palabritas
+31385;simple;118;"Pack ""Para Papá"""
+31656;simple;PP01-1-1;"Pack ""Ceviche Carretillero Power"""
+31959;simple;BOME;Cabeza y espinazo de Bonito
+32081;simple;PJ01;Pack Jalea Mixta Peruana
+32082;simple;PJ02;Pack Jalea Mixta Power
+33091;simple;;Caja mix 3
+33454;variation;;Camarones - Jumbo
+33455;variation;;Camarones - Chicos
+33456;variation;;Camarones - Jumbo congelados
+33457;variation;;Camarones - Medianos
+33640;simple;353;chorito afecto
+33641;simple;354;Chorito inafecto

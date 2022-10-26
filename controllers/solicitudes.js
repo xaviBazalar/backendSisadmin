@@ -88,7 +88,7 @@ const solicitudesGet = async(req = request, res = response) => {
         query.fecha_entrega=fecha_entrega
     }
 
-    //console.log(query)
+    console.log(query)
 
     
         Solicitud.find(query, function (err, solicitudes) {
@@ -120,10 +120,10 @@ const solicitudesGet = async(req = request, res = response) => {
     });*/
 }
 
-const getFecEntrega=()=>{
+const getFecEntrega=(dias)=>{
     hoy = new Date();
     i=0;
-    while (i<7) { // 7 días habiles
+    while (i<parseInt(dias)) { // 7 días habiles
         hoy.setTime(hoy.getTime()+24*60*60*1000); // añadimos 1 día
         if (hoy.getDay() != 6 && hoy.getDay() != 0)
             i++;  
@@ -143,11 +143,12 @@ const solicitudesPost = async(req, res = response) => {
     ]);
 
     
-    let fecha_entrega=getFecEntrega();
+    
 
     let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
 
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante} = req.body;
+    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante,sla} = req.body;
+    let fecha_entrega=getFecEntrega(sla);
     const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId ,ingresado,solicitante});
 
     // Guardar en BD
