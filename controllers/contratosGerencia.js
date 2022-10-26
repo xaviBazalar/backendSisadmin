@@ -12,8 +12,9 @@ const ContratoGerencia = require('../models/contratoGerencia')
 
 const contratosGerenciaGet = async(req = request, res = response) => {
 
-    const { gerencia,estado="" } = req.query;
+    const { gerencia,estado="" ,n_contrato="",page=1} = req.query;
     let query = {}   ;
+    let query_filter = {}   ;
     
     if(gerencia===undefined){
         query = { };
@@ -24,13 +25,22 @@ const contratosGerenciaGet = async(req = request, res = response) => {
     if(estado!==undefined && estado!=""){
         query.estado=true
     }
+
     
+    const options = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}},
+            { path: "gerencia",model:Gerencia}
+        ]
+      };//match:{ name:query_filter},
 
     const [ total, contratos_gerencia ] = await Promise.all([
         ContratoGerencia.countDocuments(query),
-        ContratoGerencia.find(query).
-        populate( { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}}).
-        populate( { path: "gerencia",model:Gerencia}).sort('contrato')
+        ContratoGerencia.paginate(query,options)
+        //populate( { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}}).
+        //populate( { path: "gerencia",model:Gerencia}).sort('contrato')
         //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);
 

@@ -9,25 +9,31 @@ const Usuario = require('../models/usuario')
 
 const tareasContratoGet = async(req = request, res = response) => {
  
-    const {contrato,n_contrato} = req.query;
+    const {contrato,n_contrato,page=1} = req.query;
 
     let query = { contrato:contrato};
 
-    
     if(contrato=="" ){
         query = {}
     }else{
         query.estado=true
     }
 
+    const options = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "tarea",model:Tarea},
+            { path: "contrato",model:Contrato},
+            { path: "gst",model:Usuario},
+            { path: "bko",model:Usuario}
+        ]
+      };
+    
 
     const [ total, contratos ] = await Promise.all([
         TareaContrato.countDocuments(query),
-        TareaContrato.find(query).
-        populate( { path: "gst",model:Usuario}).
-        populate( { path: "bko",model:Usuario}).
-        populate( { path: "tarea",model:Tarea}).
-        populate( { path: "contrato",model:Contrato}).sort('contrato')
+        TareaContrato.paginate(query,options)
     ]);
 
 

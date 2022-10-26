@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const TareaContratoSchema = Schema({
-
     tarea: { type: Schema.ObjectId, ref: "tarea" },
     contrato: { type: Schema.ObjectId, ref: "contrato" },
     gst: { type: Schema.ObjectId, ref: "gst" },
@@ -15,6 +15,7 @@ const TareaContratoSchema = Schema({
     collection : 'TareaContratos' 
 });
 
+TareaContratoSchema.plugin(mongoosePaginate)
 
 TareaContratoSchema.methods.toJSON = function() {
     const { __v, ...tareaContrato  } = this.toObject();
