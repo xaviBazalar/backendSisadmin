@@ -12,7 +12,7 @@ const ContratoGerencia = require('../models/contratoGerencia')
 
 const contratosGerenciaGet = async(req = request, res = response) => {
 
-    const { gerencia,estado="" ,n_contrato="",page=1} = req.query;
+    const { gerencia,estado="" ,n_contrato="",page=1,options=1} = req.query;
     let query = {}   ;
     let query_filter = {}   ;
     
@@ -27,7 +27,7 @@ const contratosGerenciaGet = async(req = request, res = response) => {
     }
 
     
-    const options = {
+    const optionsPag = {
         page: page,
         limit: 10,
         populate:[
@@ -36,18 +36,33 @@ const contratosGerenciaGet = async(req = request, res = response) => {
         ]
       };//match:{ name:query_filter},
 
-    const [ total, contratos_gerencia ] = await Promise.all([
-        ContratoGerencia.countDocuments(query),
-        ContratoGerencia.paginate(query,options)
-        //populate( { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}}).
-        //populate( { path: "gerencia",model:Gerencia}).sort('contrato')
-        //populate( { path: "documento_entrada",model:DocumentoEntrada })
-    ]);
 
-    res.json({
-        total,
-        contratos_gerencia
-    });
+    if(options==1){
+        const [ total, contratos_gerencia ] = await Promise.all([
+            ContratoGerencia.countDocuments(query),
+            ContratoGerencia.paginate(query,optionsPag)
+        ]);
+
+        res.json({
+            total,
+            contratos_gerencia
+        });
+    }else{
+        const [ total, contratos_gerencia ] = await Promise.all([
+            ContratoGerencia.countDocuments(query),
+            ContratoGerencia.find(query).
+            populate( { path: "contrato",model:Contrato,populate: {path: 'adc',model: Usuario}}).
+            populate( { path: "gerencia",model:Gerencia}).sort('contrato')
+        ]);
+
+        res.json({
+            total,
+            contratos_gerencia
+        });
+    }
+    
+
+    
 }
 
 const contratosGerenciaPost = async(req, res = response) => {

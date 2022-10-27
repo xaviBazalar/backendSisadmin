@@ -11,7 +11,7 @@ const DocumentacionSolicitud = require('../models/documentacionSolicitud')
 
 const documentacionSolicitudGet = async(req = request, res = response) => {
 
-    const { tarea,contrato } = req.query;
+    const { tarea,contrato,page=1 } = req.query;
     let query = {}   ;
     
     if(tarea===undefined){
@@ -20,12 +20,20 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
         query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
     
+    const optionsPag = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "tarea",model:Tarea},
+            { path: "contrato",model:Contrato}
+        ]
+      };//match:{ name:query_filter},
 
     const [ total, documentacion_solicitudes ] = await Promise.all([
         DocumentacionSolicitud.countDocuments(query),
-        DocumentacionSolicitud.find(query).
-        populate( { path: "tarea",model:Tarea}).
-        populate( { path: "contrato",model:Contrato})
+        DocumentacionSolicitud.paginate(query,optionsPag)
+        //populate( { path: "tarea",model:Tarea}).
+        //populate( { path: "contrato",model:Contrato})
         //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);
 
