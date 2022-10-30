@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const GestionSolicitudSchema = Schema({
     solicitud: { type: Schema.ObjectId, ref: "solicitudes" },
@@ -17,6 +18,7 @@ const GestionSolicitudSchema = Schema({
     collection : 'gestion_solicitud' 
 });
 
+GestionSolicitudSchema.plugin(mongoosePaginate)
 
 GestionSolicitudSchema.methods.toJSON = function() {
     const { __v, ...gestion_solicitud  } = this.toObject();

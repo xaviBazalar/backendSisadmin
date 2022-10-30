@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const EstadoResultadoSchema = Schema({
    
@@ -15,8 +16,9 @@ const EstadoResultadoSchema = Schema({
     collection : 'estado_resultado' 
 });
 
+EstadoResultadoSchema.plugin(mongoosePaginate)
 
-  EstadoResultadoSchema.methods.toJSON = function() {
+EstadoResultadoSchema.methods.toJSON = function() {
     const { __v, ...estadoResultado  } = this.toObject();
     return estadoResultado;
 }

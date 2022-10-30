@@ -6,19 +6,38 @@ const DocumentoEntrada = require("../models/documentoEntrada");
 
 const documentosEntradaGet = async(req = request, res = response) => {
 
-    //const { id } = req.query;
+    const { page=1,options=1 } = req.query;
     let query = {  };
 
-    const [ total, documentos_entrada ] = await Promise.all([
-        DocumentoEntrada.countDocuments(query),
-        DocumentoEntrada.find(query)
-    ]);
+    const optionsPag = {
+        page: page,
+        limit: 10
+    }
 
- 
-    res.json({
-        total,
-        documentos_entrada
-    });
+    if(options==1){
+        const [ total, documentos_entrada ] = await Promise.all([
+            DocumentoEntrada.countDocuments(query),
+            DocumentoEntrada.paginate(query,optionsPag)
+        ]);
+    
+     
+        res.json({
+            total,
+            documentos_entrada
+        });
+    }else{
+        const [ total, documentos_entrada ] = await Promise.all([
+            DocumentoEntrada.countDocuments(query),
+            DocumentoEntrada.find(query,optionsPag)
+        ]);
+    
+     
+        res.json({
+            total,
+            documentos_entrada
+        });
+    }
+
 }
 
 const documentosEntradaPost = async(req, res = response) => {

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const DocumentoEntradaSchema = Schema({
     tipo_documento: {
@@ -21,6 +22,8 @@ const DocumentoEntradaSchema = Schema({
 { 
     collection : 'documentos_entrada' 
 });
+
+DocumentoEntradaSchema.plugin(mongoosePaginate)
 
 
 module.exports = model( 'DocumentoEntrada', DocumentoEntradaSchema );

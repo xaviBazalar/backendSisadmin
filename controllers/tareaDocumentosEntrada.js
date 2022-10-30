@@ -12,7 +12,7 @@ const TareaDocumentosEntrada = require('../models/tareaDocumentoEntrada')
 
 const tareaDocumentosEntradaGet = async(req = request, res = response) => {
 
-    const { tarea,contrato } = req.query;
+    const { tarea,contrato,page=1,options=1  } = req.query;
     let query = {}  ;
     
     if(tarea===undefined){
@@ -21,18 +21,42 @@ const tareaDocumentosEntradaGet = async(req = request, res = response) => {
         query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
 
-    const [ total, tarea_documentos_entrada ] = await Promise.all([
-        TareaDocumentosEntrada.countDocuments(query),
-        TareaDocumentosEntrada.find(query).
-        populate( { path: "tarea",model:Tarea}).
-        populate( { path: "documento_entrada",model:DocumentoEntrada }).
-        populate( { path: "contrato",model:Contrato }).sort('contrato')
-    ]);
+    const optionsPag = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "tarea",model:Tarea},
+            { path: "documento_entrada",model:DocumentoEntrada},
+            { path: "contrato",model:Contrato}
+        ]
+      };
 
-    res.json({
-        total,
-        tarea_documentos_entrada
-    });
+    if(options==1){
+        const [ total, tarea_documentos_entrada ] = await Promise.all([
+            TareaDocumentosEntrada.countDocuments(query),
+            TareaDocumentosEntrada.paginate(query,optionsPag)
+        ]);
+    
+        res.json({
+            total,
+            tarea_documentos_entrada
+        });
+    }else{
+        const [ total, tarea_documentos_entrada ] = await Promise.all([
+            TareaDocumentosEntrada.countDocuments(query),
+            TareaDocumentosEntrada.find(query).
+            populate( { path: "tarea",model:Tarea}).
+            populate( { path: "documento_entrada",model:DocumentoEntrada }).
+            populate( { path: "contrato",model:Contrato }).sort('contrato')
+        ]);
+    
+        res.json({
+            total,
+            tarea_documentos_entrada
+        });
+    }
+
+    
 }
 
 const tareaDocumentosEntradaPost = async(req, res = response) => {

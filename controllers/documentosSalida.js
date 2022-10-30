@@ -6,19 +6,36 @@ const DocumentoSalida = require("../models/documentoSalida");
 
 const documentosSalidaGet = async(req = request, res = response) => {
 
-    //const { id } = req.query;
+    const { page=1,options=1 } = req.query;
     let query = {  };
 
-    const [ total, documentos_salida ] = await Promise.all([
-        DocumentoSalida.countDocuments(query),
-        DocumentoSalida.find(query)
-    ]);
+    const optionsPag = {
+        page: page,
+        limit: 10
+    }
 
+    if(options==1){
+        const [ total, documentos_salida ] = await Promise.all([
+            DocumentoSalida.countDocuments(query),
+            DocumentoSalida.paginate(query,optionsPag)
+        ]);
+
+        res.json({
+            total,
+            documentos_salida
+        });
+    }else{
+        const [ total, documentos_salida ] = await Promise.all([
+            DocumentoSalida.countDocuments(query),
+            DocumentoSalida.find(query)
+        ]);
+
+        res.json({
+            total,
+            documentos_salida
+        });
+    }
  
-    res.json({
-        total,
-        documentos_salida
-    });
 }
 
 const documentosSalidaPost = async(req, res = response) => {

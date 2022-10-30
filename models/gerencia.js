@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const GerenciaSchema = Schema({
    
@@ -15,8 +16,9 @@ const GerenciaSchema = Schema({
     collection : 'gerencia' 
 });
 
+GerenciaSchema.plugin(mongoosePaginate)
 
-   GerenciaSchema.methods.toJSON = function() {
+GerenciaSchema.methods.toJSON = function() {
     const { __v, ...gerencia  } = this.toObject();
     return gerencia;
 }

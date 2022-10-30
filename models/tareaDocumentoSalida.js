@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const TareaDocumentoSalidaSchema = Schema({
     tarea: { type: Schema.ObjectId, ref: "tarea" },
@@ -22,5 +23,6 @@ const TareaDocumentoSalidaSchema = Schema({
     collection : 'tarea_documentos_salida' 
 });
 
+TareaDocumentoSalidaSchema.plugin(mongoosePaginate)
 
 module.exports = model( 'TareaDocumentoSalida', TareaDocumentoSalidaSchema );

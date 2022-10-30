@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const getFecEntrega=()=>{
     hoy = new Date();
@@ -57,6 +58,7 @@ const SolicitudSchema = Schema({
     collection : 'solicitudes' 
 });
 
+SolicitudSchema.plugin(mongoosePaginate)
 
 SolicitudSchema.methods.toJSON = function() {
     const { __v, ...solicitud  } = this.toObject();

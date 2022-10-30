@@ -12,7 +12,7 @@ const TareaDocumentosSalida = require('../models/tareaDocumentoSalida')
 
 const tareaDocumentosSalidaGet = async(req = request, res = response) => {
 
-    const { tarea,contrato } = req.query;
+    const { tarea,contrato ,page=1,options=1} = req.query;
     let query = {}   ;
     
     if(tarea===undefined){
@@ -21,18 +21,42 @@ const tareaDocumentosSalidaGet = async(req = request, res = response) => {
         query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
 
-    const [ total, tarea_documentos_salida ] = await Promise.all([
-        TareaDocumentosSalida.countDocuments(query),
-        TareaDocumentosSalida.find(query).
-        populate( { path: "tarea",model:Tarea}).
-        populate( { path: "documento_salida",model:DocumentoSalida }).
-        populate( { path: "contrato",model:Contrato })
-    ]);
+    const optionsPag = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "tarea",model:Tarea},
+            { path: "documento_salida",model:DocumentoSalida},
+            { path: "contrato",model:Contrato}
+        ]
+      };
 
-    res.json({
-        total,
-        tarea_documentos_salida
-    });
+    if(options==1){
+        const [ total, tarea_documentos_salida ] = await Promise.all([
+            TareaDocumentosSalida.countDocuments(query),
+            TareaDocumentosSalida.paginate(query,optionsPag)
+        ]);
+    
+        res.json({
+            total,
+            tarea_documentos_salida
+        });
+    }else{
+        const [ total, tarea_documentos_salida ] = await Promise.all([
+            TareaDocumentosSalida.countDocuments(query),
+            TareaDocumentosSalida.find(query).
+            populate( { path: "tarea",model:Tarea}).
+            populate( { path: "documento_salida",model:DocumentoSalida }).
+            populate( { path: "contrato",model:Contrato })
+        ]);
+    
+        res.json({
+            total,
+            tarea_documentos_salida
+        });
+    }
+    
+    
 }
 
 const tareaDocumentosSalidaPost = async(req, res = response) => {
