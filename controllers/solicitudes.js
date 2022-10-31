@@ -22,7 +22,7 @@ const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
     
-    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko,fecha_solicitud,fecha_inicio,fecha_entrega} = req.query;
+    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko,fecha_solicitud,fecha_inicio,fecha_entrega,page=1,options=1} = req.query;
     let query = { _id:id };
     if(id===undefined){
         query = { };
@@ -88,36 +88,52 @@ const solicitudesGet = async(req = request, res = response) => {
         query.fecha_entrega=fecha_entrega
     }
 
-    console.log(query)
+    const optionsPag = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "gerencia",model:Gerencia},
+            { path: "contrato",model:Contrato},
+            { path: "tarea",model:Tarea},
+            { path: "estado_solicitud",model:EstadoSolicitud},
+            { path: "gst",model:Usuario},
+            { path: "bko",model:Usuario},
+            { path: "estado_resultado",model:EstadoResultado},
+            { path: "solicitante",model:Usuario}
+        ]
+    };
 
+    if(options==1){
+        const [ total, solicitudes  ] = await Promise.all([
+            Solicitud.countDocuments(query),
+            Solicitud.paginate(query,optionsPag)
+        ]);
     
-        Solicitud.find(query, function (err, solicitudes) {
-            Gerencia.populate(solicitudes, { path: "gerencia" }, function (err, solicitudes) {
-                Contrato.populate(solicitudes, { path: "contrato" }, function (err, solicitudes) {
-                    Tarea.populate(solicitudes, { path: "tarea" }, function (err, solicitudes) {
-                        EstadoSolicitud.populate(solicitudes, { path: "estado_solicitud" }, function (err, solicitudes) {
-                            Usuario.populate(solicitudes, { path: "gst" }, function (err, solicitudes) {
-                                Usuario.populate(solicitudes, { path: "bko" }, function (err, solicitudes) {
-                                    EstadoResultado.populate(solicitudes, { path: "estado_resultado" }, function (err, solicitudes) {
-                                        Usuario.populate(solicitudes, { path: "solicitante" }, function (err, solicitudes) {
-                                            res.json({
-                                                solicitudes,
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
+        res.json({
+            total,
+            solicitudes
         });
+    }else{
+        const [ total, solicitudes  ] = await Promise.all([
+            Solicitud.countDocuments(query),
+            Solicitud.find(query).
+            populate( { path: "gerencia",model:Gerencia}).
+            populate( { path: "contrato",model:Contrato}).
+            populate( { path: "tarea",model:Tarea}).
+            populate( { path: "estado_solicitud",model:EstadoSolicitud}).
+            populate( { path: "gst",model:Usuario}).
+            populate( { path: "bko",model:Usuario}).
+            populate( { path: "estado_resultado",model:EstadoResultado}).
+            populate( { path: "solicitante",model:Usuario})
+        ]);
     
+        res.json({
+            total,
+            solicitudes
+        });
+    }
 
-    /*res.json({
-        total,
-        solicitudes
-    });*/
+    
 }
 
 const getFecEntrega=(dias)=>{

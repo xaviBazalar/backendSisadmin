@@ -9,29 +9,40 @@ const Perfil = require('../models/perfil.js');
 
 const usuariosGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
-    const query = { estado: true };
+    const { limite = 5, desde = 0,page=1,options=1 } = req.query;
+    const query = {  };
 
-    /*const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite )).populate( { path: "rol" })
-    ]);*/
+    const optionsPag = {
+        page: page,
+        limit: 10,
+        populate:[
+            { path: "perfil",model:Perfil}
+        ]
+      };
 
-    Usuario.find({}, function (err, usuarios) {
-        Perfil.populate(usuarios, { path: "perfil" }, function (err, usuarios) {
-          res.json({
-                usuarios,
-
-            });
+    if(options==1){
+        const [ total, usuarios ] = await Promise.all([
+            Usuario.countDocuments(query),
+            Usuario.paginate(query,optionsPag)
+        ]);
+    
+        res.json({
+            total,
+            usuarios
         });
-      });
-
-    /*res.json({
-    total,
-        usuarios
-    });*/
+    }else{
+        const [ total, usuarios ] = await Promise.all([
+            Usuario.countDocuments(query),
+            Usuario.find(query).
+            populate( { path: "perfil",model:Perfil}) 
+        ]);
+    
+        res.json({
+            total,
+            usuarios
+        });
+    }
+    
 }
 
 const usuariosPost = async(req, res = response) => {

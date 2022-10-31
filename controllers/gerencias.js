@@ -8,22 +8,39 @@ const Gerencia = require('../models/gerencia');
 
 const gerenciaGet = async(req = request, res = response) => {
 
-    const { limite = 8, desde = 0, estado="" } = req.query;
+    const { limite = 8, desde = 0, estado="",page=1,options=1 } = req.query;
     const query = {  };//estado: true
     if(estado!==undefined && estado!=""){
         query.estado=true
     }
 
-    const [ total, gerencias ] = await Promise.all([
+    const optionsPag = {
+        page: page,
+        limit: 10
+      };
+
+    if(options==1){
+        const [ total, gerencias ] = await Promise.all([
+            Gerencia.countDocuments(query),
+            Gerencia.paginate(query,optionsPag)
+        ]);
+
+        res.json({
+            total,
+            gerencias
+        });
+    }else{
+        const [ total, gerencias ] = await Promise.all([
             Gerencia.countDocuments(query),
             Gerencia.find(query)
+        ]);
 
-    ]);
-
-    res.json({
-        total,
-        gerencias
-    });
+        res.json({
+            total,
+            gerencias
+        });
+    }
+    
 }
 
 const gerenciaPost = async(req, res = response) => {

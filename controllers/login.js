@@ -6,6 +6,22 @@ const Usuario = require('../models/usuario');
 const Rol = require('../models/role');
 const Perfil = require('../models/perfil.js');
 
+const loginGet = async(req = request, res = response) => {
+
+    const { emailS="" } = req.query;
+    const query = { correo:emailS.toLowerCase()};
+
+    const [ total, validation  ] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query,{ "correo":1,"nombre":1}).
+        populate( { path: "perfil",model:Perfil})
+    ]);
+
+    res.json({
+        total,
+        validation
+    });
+}
 
 const loginPost = async(req, res = response) => {
     
@@ -40,6 +56,7 @@ const loginPatch = (req, res = response) => {
 
 
 module.exports = {
+    loginGet,
     loginPost,
     loginPatch
 }
