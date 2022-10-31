@@ -13,7 +13,7 @@ const getFecRegistro=()=>{
 
 const NotificacionUsuarioSchema = Schema({
     
-    usuario: { type: Schema.ObjectId, ref: "usuarios" },
+    usuario: { type: Schema.ObjectId, ref: "usuario" },
     tipo: {
         type: String,
     },

@@ -22,7 +22,28 @@ const NotificacionUsuario= require('../models/notificacionUsuario')
 
 const solicitudesGet = async(req = request, res = response) => {
     
-    const { id , gerencia, tarea, perfil,estado_solicitud,estado_resultado,ingresado,solicitante,gst,bko,fecha_solicitud,fecha_inicio,fecha_entrega,page=1,options=1} = req.query;
+    const { 
+        id , 
+        gerencia, 
+        tarea, 
+        perfil,
+        estado_solicitud,
+        estado_resultado,
+        ingresado,
+        solicitante,
+        gst,
+        bko,
+        fecha_solicitud,
+        fecha_inicio,
+        fecha_entrega,
+        page=1,
+        options=1,
+        por_vencer=0,
+        vencido=0,
+        fec_hoy='',
+        fec_ven
+    } = req.query;
+    
     let query = { _id:id };
     if(id===undefined){
         query = { };
@@ -61,11 +82,11 @@ const solicitudesGet = async(req = request, res = response) => {
     }
 
     if(id===undefined & gst!==undefined){
-        query.gst=mongoose.Types. ObjectId(gst)
+        query.gst=mongoose.Types.ObjectId(gst)
     }
 
     if(id===undefined & bko!==undefined){
-        query.bko=mongoose.Types. ObjectId(bko)
+        query.bko=mongoose.Types.ObjectId(bko)
     }
 
     if(id===undefined & estado_solicitud!="" & estado_solicitud!==undefined){
@@ -88,6 +109,16 @@ const solicitudesGet = async(req = request, res = response) => {
         query.fecha_entrega=fecha_entrega
     }
 
+    if(por_vencer==1){
+        query.fecha_entrega={$gte: fec_hoy,$lte:  fec_ven}
+    }
+   
+    //query.fecha_entrega={$gte: "2022-10-31",$lte:  ''}
+
+    //query.estado_solicitud={$ne:mongoose.Types.ObjectId("62fad63448d35ca4acd1467f")}
+
+    //let querys={estado_solicitud:{$ne:mongoose.Types.ObjectId("62fad63448d35ca4acd1467f")}}
+
     const optionsPag = {
         page: page,
         limit: 10,
@@ -102,6 +133,8 @@ const solicitudesGet = async(req = request, res = response) => {
             { path: "solicitante",model:Usuario}
         ]
     };
+
+    console.log(query)
 
     if(options==1){
         const [ total, solicitudes  ] = await Promise.all([
@@ -159,7 +192,6 @@ const solicitudesPost = async(req, res = response) => {
     ]);
 
     
-    
 
     let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
 
@@ -184,6 +216,29 @@ const solicitudesPost = async(req, res = response) => {
     const notificacioUsuario= new NotificacionUsuario({usuario,tipo,link})
     await notificacioUsuario.save();
 
+    usuario=bko
+    tipo="Solicitud"
+    link="/solicitud/"+solicitud_
+    const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuarioB.save();
+
+    /** Notificacion */
+    const solicitudA = await Solicitud.findById(solicitud_);
+ 
+    let queryContrato={"_id":mongoose.Types. ObjectId(solicitudA.contrato)}
+
+    const [ contratos ] = await Promise.all([
+        Contrato.find(queryContrato).
+        populate({ path: "adc",model:Usuario})
+    ]);
+
+    usuario=contratos[0].adc._id
+    tipo="Ingreso Nueva Solicitud"
+    link="/solicitud/"+solicitud_
+    const notificacioUsuarioC= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuarioC.save();
+    /*Fin Notificacion*/
+
     res.json({
         solicitud
     });
@@ -198,6 +253,11 @@ const solicitudesPut = async(req, res = response) => {
     let dataUpdate;
     let evento;
 
+    let solicitud_=id
+    
+
+    let tituloNotificacionADC=""
+    let solicitudTerminada=""
     if(ingresado!==undefined){
         dataUpdate={
             _id:id,
@@ -213,9 +273,24 @@ const solicitudesPut = async(req, res = response) => {
             bko:bko
         } 
 
+        if(estado_solicitud=="62fad63448d35ca4acd1467f"){
+            solicitudTerminada=" - Terminada"
+        }
+
         const dataES= await EstadoSolicitud.findById(mongoose.Types. ObjectId(estado_solicitud))
         const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
         evento=`Actualización Estado Solicitud - ${dataES.nombre_estado} - ${usuario_.nombre}`
+
+        let usuario=gst
+        tipo="Estado Solicitud"
+        tituloNotificacionADC=tipo
+        link="/solicitud/"+solicitud_
+        const notificacioUsuario= new NotificacionUsuario({usuario,tipo,link})
+        await notificacioUsuario.save();
+
+        usuario=bko
+        const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+        await notificacioUsuarioB.save();
     }else{
         dataUpdate={
             _id:id,
@@ -224,14 +299,39 @@ const solicitudesPut = async(req, res = response) => {
         const dataER= await EstadoResultado.findById(mongoose.Types. ObjectId(estado_resultado))
         const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
         evento=`Actualización Estado Resultado - ${dataER.nombre_resultado}- ${usuario_.nombre}`
+
+        let usuario=gst
+        tipo="Estado Resultado"
+        tituloNotificacionADC=tipo
+        link="/solicitud/"+solicitud_
+        const notificacioUsuario= new NotificacionUsuario({usuario,tipo,link})
+        await notificacioUsuario.save();
+
+        usuario=bko
+        const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+        await notificacioUsuarioB.save();
     }
 
+    
     const solicitud = await Solicitud.findByIdAndUpdate( id, dataUpdate );
+    let queryContrato={"_id":mongoose.Types. ObjectId(solicitud.contrato)}
 
-    let solicitud_=id
+    const [ contratos ] = await Promise.all([
+        Contrato.find(queryContrato).
+        populate({ path: "adc",model:Usuario})
+    ]);
+
     
     const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
     await bitacoraSolicitud.save();
+
+    
+
+    usuario=contratos[0].adc._id
+    tipo="Actualizacion "+tituloNotificacionADC+" "+solicitudTerminada
+    link="/solicitud/"+solicitud_
+    const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuarioB.save();
 
     res.json(solicitud);
 }

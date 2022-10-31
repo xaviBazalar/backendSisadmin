@@ -6,6 +6,10 @@ const mongoose = require('mongoose');
 const Tarea= require('../models/tarea')
 const TareaDocumentoSalida= require('../models/tareaDocumentoSalida')
 const TareaDocumentosSalidaSolicitud = require('../models/tareaDocumentoSalidaSolicitud')
+const Solicitud=require('../models/solicitud')
+const Contrato=require('../models/contrato')
+const NotificacionUsuario=require('../models/notificacionUsuario')
+const Usuario=require('../models/usuario')
 
 const tareaDocumentosSalidaSolicitudGet = async(req = request, res = response) => {
 
@@ -39,8 +43,26 @@ const tareaDocumentosSalidaSolicitudPost = async(req, res = response) => {
     const { tarea_documento, randomId, validado, url_ref,observacion} = req.body;
     const tareaDocumentoSalidaSolicitud = new TareaDocumentosSalidaSolicitud({ tarea_documento, randomId, validado, url_ref ,observacion });
 
+    /** Notificacion */
+    const solicitudA = await Solicitud.find({randomId:randomId});
+    
+    let queryContrato={"_id":mongoose.Types. ObjectId(solicitudA[0].contrato._id)}
+
+    const [ contratos ] = await Promise.all([
+        Contrato.find(queryContrato).
+        populate({ path: "adc",model:Usuario})
+    ]);
+
+    let usuario=contratos[0].adc._id
+    let tipo="Actualizacion Subidad Documento Resultado"
+    let link="/solicitud/"+solicitudA[0]._id
+    const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuarioB.save();
+    /*Fin Notificacion*/
+
     // Guardar en BD
     await tareaDocumentoSalidaSolicitud.save();
+
 
     res.json({
         tareaDocumentoSalidaSolicitud

@@ -8,6 +8,9 @@ const Usuario = require('../models/usuario')
 const DocumentacionSolicitud= require('../models/documentacionSolicitud')
 const GestionSolicitud = require('../models/gestionSolicitud')
 const BitacoraSolicitud = require('../models/bitacora_solicitud')
+const Solicitud=require('../models/solicitud')
+const Contrato=require('../models/contrato')
+const NotificacionUsuario=require('../models/notificacionUsuario')
 
 const gestionSolicitudGet = async(req = request, res = response) => {
 
@@ -73,6 +76,23 @@ const gestionSolicitudPut = async(req, res = response) => {
     const bitacoraSolicitud = new BitacoraSolicitud({ solicitud_,evento });
     await bitacoraSolicitud.save();
 
+    /** Notificacion */
+    const solicitudA = await Solicitud.findById(solicitud);
+ 
+    let queryContrato={"_id":mongoose.Types. ObjectId(solicitudA.contrato)}
+
+    const [ contratos ] = await Promise.all([
+        Contrato.find(queryContrato).
+        populate({ path: "adc",model:Usuario})
+    ]);
+
+    let usuario=contratos[0].adc._id
+    let tipo="Actualizacion Gestion Solicitud"
+    let link="/solicitud/"+solicitud_
+    const notificacioUsuarioB= new NotificacionUsuario({usuario,tipo,link})
+    await notificacioUsuarioB.save();
+    /*Fin Notificacion*/
+    
     res.json(gestionSolicitud);
 
 }
