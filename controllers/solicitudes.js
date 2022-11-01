@@ -112,6 +112,11 @@ const solicitudesGet = async(req = request, res = response) => {
     if(por_vencer==1){
         query.fecha_entrega={$gte: fec_hoy,$lte:  fec_ven}
     }
+
+    if(vencido==1){
+        query.fecha_entrega={$lt:fec_hoy}
+        query.estado_solicitud={$ne:mongoose.Types.ObjectId("62fad63448d35ca4acd1467f")}
+    }
    
     //query.fecha_entrega={$gte: "2022-10-31",$lte:  ''}
 

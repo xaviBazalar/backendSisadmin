@@ -47,9 +47,14 @@ const usuariosGet = async(req = request, res = response) => {
 
 const usuariosPost = async(req, res = response) => {
     
-    const { nombre, correo, login, password, estado, perfil,autorizar } = req.body;
+    const { nombre, correo, login, password, estado, perfil,autorizar=true } = req.body;
+    
+    if(autorizar===undefined || autorizar=="undefined"){
+        autorizar=true
+    }
     const usuario = new Usuario({ nombre, correo, login, password,estado,perfil,autorizar });
 
+    
     // Encriptar la contraseña
     //const salt = bcryptjs.genSaltSync();
     //usuario.password = bcryptjs.hashSync( password, salt );
@@ -63,8 +68,10 @@ const usuariosPost = async(req, res = response) => {
 }
 
 const usuariosPut = async(req, res = response) => {
-    const { id,nombre,correo,login ,password,estado,perfil,autorizar} = req.body;
-
+    const { id,nombre,correo,login ,password,estado,perfil,autorizar=true} = req.body;
+    if(autorizar===undefined || autorizar=="undefined"){
+        autorizar=true
+    }
     const dataUpdate={
         _id:id,
         nombre:nombre,
@@ -72,8 +79,10 @@ const usuariosPut = async(req, res = response) => {
         login:login,
         estado:estado,
         perfil:perfil,
-        autorizar:autorizar,
+        autorizar:(autorizar=="")?true:autorizar,
     }
+
+    console.log(dataUpdate)
 
     if(password!==undefined & password!=""){
         dataUpdate.password=password
