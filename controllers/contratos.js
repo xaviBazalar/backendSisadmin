@@ -27,7 +27,6 @@ const contratosGet = async(req = request, res = response) => {
     }
    
 
-    console.log(query)
     
 
     /*const [ total, usuarios ] = await Promise.all([

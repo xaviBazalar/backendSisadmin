@@ -188,7 +188,6 @@ const tareaDocumentosSalidaPut = async(req, res = response) => {
         estado:estado
     }
 
-    console.log(dataUpdate)
 
 
     const tareaDocumentoSalida = await TareaDocumentosSalida.findByIdAndUpdate( id, dataUpdate );

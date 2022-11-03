@@ -94,7 +94,6 @@ const usuariosPut = async(req, res = response) => {
         autorizar:(autorizar=="")?true:autorizar,
     }
 
-    console.log(dataUpdate)
 
     if(password!==undefined & password!=""){
         dataUpdate.password=password

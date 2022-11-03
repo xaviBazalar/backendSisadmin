@@ -38,7 +38,7 @@ const sendEmail=(email,nombre,clave)=>{
         });
 
         response.on('end', function () {
-            console.log(str);
+            //console.log(str);
         });
     }
 

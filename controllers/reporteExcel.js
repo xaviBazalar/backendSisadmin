@@ -63,7 +63,6 @@ const generarExcel=async(desde,hasta,nombreExcel)=>{
     let query={}
     query.fecha_solicitud={$gte: desde,$lte:  hasta}
 
-    console.log(query)
     const [ solicitudes  ] = await Promise.all([
         Solicitud.find(query).
         populate( { path: "gerencia",model:Gerencia}).

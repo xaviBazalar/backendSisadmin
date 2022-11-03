@@ -21,7 +21,6 @@ const notificacionUsuarioGet = async(req = request, res = response) => {
             query = {"usuario":mongoose.Types. ObjectId(usuario)}   ;
         }
 
-        console.log(query)
 
         const [ total, notificaciones_usuario ] = await Promise.all([
             NotificacionUsuario.countDocuments(query),

@@ -69,10 +69,55 @@ const dashboardGet = async(req = request, res = response) => {
         }
     ])
 
+    let carga_trabajo_total=await Solicitud.aggregate([
+        { 
+            "$lookup": {
+              "from": "estado_solicitud",
+              "localField": "estado_solicitud",
+              "foreignField": "_id",
+              "as": "estado_solicitud"
+            }
+        },
+        {
+            $unwind: "$estado_solicitud"
+        },
+
+        { "$group": {
+            "_id": {
+                "estado_solicitud": "$estado_solicitud.nombre_estado",
+                "id": "$estado_solicitud._id",
+            },
+            "total": { "$sum": 1 }
+        }}
+    ])
+
+    let tareas_por_persona=await Solicitud.aggregate([
+        { 
+            "$lookup": {
+              "from": "usuarios",
+              "localField": "gst",
+              "foreignField": "_id",
+              "as": "gst"
+            }
+        },
+        {
+            $unwind: "$gst"
+        },
+
+        { "$group": {
+            "_id": {
+                "nombre": "$gst.nombre",
+                "id": "$gst._id",
+            },
+            "total": { "$sum": 1 }
+        }}
+    ])
 
     res.json({
             carga_trabajo,
-            vencidos
+            vencidos,
+            carga_trabajo_total,
+            tareas_por_persona
     });
     
     

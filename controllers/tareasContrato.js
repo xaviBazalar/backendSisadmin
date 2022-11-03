@@ -202,7 +202,6 @@ const tareasContratoPut = async(req,res = response) => {
         estado:estado
     }
 
-    console.log(dataUpdate)
 
     const tareaContrato = await TareaContrato.findByIdAndUpdate( id, dataUpdate );
 
