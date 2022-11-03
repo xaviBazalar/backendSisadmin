@@ -43,13 +43,13 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
     ]);
 
     if(n_contrato!=""){
-        let contratosTareaDEFilter=await filterContratosInDETareaContratos(n_contrato)
-        tarea_documentos_entrada.docs=contratosTareaDEFilter
+        let contratosTareaDEFilter=await filterContratosDG(n_contrato)
+        documentacion_solicitudes.docs=contratosTareaDEFilter
     }
 
     if(n_tarea!=""){
-        let contratosTareaDEFilter=await filterTareasInDETareaContratos(n_tarea)
-        tarea_documentos_entrada.docs=contratosTareaDEFilter
+        let contratosTareaDEFilter=await filterTareasDG(n_tarea)
+        documentacion_solicitudes.docs=contratosTareaDEFilter
     }
 
     res.json({
