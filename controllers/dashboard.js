@@ -8,7 +8,7 @@ const Solicitud = require('../models/solicitud');
 
 const dashboardGet = async(req = request, res = response) => {
 
-    const { reporte = "" } = req.query;
+    const { reporte = "",fec_desde="",fec_hasta="" } = req.query;
     const query = {  };//estado: true
 
     let carga_trabajo=await Solicitud.aggregate([
@@ -113,11 +113,34 @@ const dashboardGet = async(req = request, res = response) => {
         }}
     ])
 
+    let solicitudes_nuevas_semana=await Solicitud.aggregate([
+        {
+            "$match": {"$expr": {
+                $and: [
+                        {
+                            $gte: ['$fecha_solicitud','2022-10-30']
+                        },
+                        {
+                            $lte: ['$fecha_solicitud','2022-11-03']
+                        }
+                    ]
+                }
+            }
+        },
+        { "$group": {
+            "_id": {
+                "fecha_solicitud": "$fecha_solicitud"
+            },
+            "total": { "$sum": 1 }
+        }}
+    ])
+
     res.json({
             carga_trabajo,
             vencidos,
             carga_trabajo_total,
-            tareas_por_persona
+            tareas_por_persona,
+            solicitudes_nuevas_semana
     });
     
     
