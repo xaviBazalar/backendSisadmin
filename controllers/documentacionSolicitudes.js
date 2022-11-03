@@ -11,7 +11,7 @@ const DocumentacionSolicitud = require('../models/documentacionSolicitud')
 
 const documentacionSolicitudGet = async(req = request, res = response) => {
 
-    const { tarea,contrato,page=1 } = req.query;
+    const { tarea,contrato,page=1,n_contrato="",n_tarea="",n_gestion="" } = req.query;
     let query = {}   ;
     
     if(tarea===undefined){
@@ -20,6 +20,14 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
         query = {"tarea":mongoose.Types. ObjectId(tarea),"contrato":mongoose.Types. ObjectId(contrato)}   ;
     }
     
+    if(n_contrato!="" || n_tarea!="" ){
+        query={"contrato.contrato:":{$regex:`.*K,*`}} // Usar para dejar en 0 y poder filtrar
+    }
+
+    if(n_gestion!=""){
+        query.nombre_documento={$regex:`.*${n_gestion},*`};
+    }
+
     const optionsPag = {
         page: page,
         limit: 10,
@@ -27,20 +35,89 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
             { path: "tarea",model:Tarea},
             { path: "contrato",model:Contrato}
         ]
-      };//match:{ name:query_filter},
+      };
 
     const [ total, documentacion_solicitudes ] = await Promise.all([
         DocumentacionSolicitud.countDocuments(query),
         DocumentacionSolicitud.paginate(query,optionsPag)
-        //populate( { path: "tarea",model:Tarea}).
-        //populate( { path: "contrato",model:Contrato})
-        //populate( { path: "documento_entrada",model:DocumentoEntrada })
     ]);
+
+    if(n_contrato!=""){
+        let contratosTareaDEFilter=await filterContratosInDETareaContratos(n_contrato)
+        tarea_documentos_entrada.docs=contratosTareaDEFilter
+    }
+
+    if(n_tarea!=""){
+        let contratosTareaDEFilter=await filterTareasInDETareaContratos(n_tarea)
+        tarea_documentos_entrada.docs=contratosTareaDEFilter
+    }
 
     res.json({
         total,
         documentacion_solicitudes
     });
+}
+
+let filterContratosDG=async(n_contrato)=>{
+    let contratosTareaFilter=await DocumentacionSolicitud.aggregate([
+          
+          
+        { 
+            "$lookup": {
+              "from": "tareas",
+              "localField": "tarea",
+              "foreignField": "_id",
+              "as": "tarea"
+            }
+        },
+        {
+            $unwind: "$tarea"
+        },
+        {
+            
+            "$lookup": {
+                "from": "contratos",
+                "localField": "contrato",
+                "foreignField": "_id",
+                "as": "contrato"
+              }
+        },
+        {
+            $unwind: "$contrato"
+        }]).match({"contrato.contrato": { $regex: `.*${n_contrato},*` }})
+
+        return contratosTareaFilter
+}
+
+let filterTareasDG=async(n_tarea)=>{
+    let contratosTareaFilter=await DocumentacionSolicitud.aggregate([
+          
+          
+        { 
+            "$lookup": {
+              "from": "tareas",
+              "localField": "tarea",
+              "foreignField": "_id",
+              "as": "tarea"
+            }
+        },
+        {
+            $unwind: "$tarea"
+        },
+        {
+            
+            "$lookup": {
+                "from": "contratos",
+                "localField": "contrato",
+                "foreignField": "_id",
+                "as": "contrato"
+              }
+        },
+        {
+            $unwind: "$contrato"
+        }]).match({"tarea.nombre_tarea": { $regex: `.*${n_tarea},*` }})
+
+        return contratosTareaFilter
 }
 
 const documentacionSolicitudPost = async(req, res = response) => {

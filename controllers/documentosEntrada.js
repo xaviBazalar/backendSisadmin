@@ -6,8 +6,12 @@ const DocumentoEntrada = require("../models/documentoEntrada");
 
 const documentosEntradaGet = async(req = request, res = response) => {
 
-    const { page=1,options=1 } = req.query;
+    const { page=1,options=1,n_documento_entrada="" } = req.query;
     let query = {  };
+
+    if(n_documento_entrada!=""){
+        query.descripcion={$regex:`.*${n_documento_entrada},*`};//
+    }
 
     const optionsPag = {
         page: page,

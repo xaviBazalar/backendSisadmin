@@ -115,7 +115,8 @@ let filterContratosInTareaContratos=async(n_contrato)=>{
         },
         {
             $unwind: "$bko"
-        }]).match({"contrato.contrato": { $regex: `.*${n_contrato},*` }})
+        }
+        ]).match({"contrato.contrato": { $regex: `.*${n_contrato},*` }})
 
         return contratosTareaFilter
 }

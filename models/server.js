@@ -33,6 +33,7 @@ class Server {
         this.perfilesPatch='/api/perfiles'
         this.contratosGerenciaPatch='/api/contratosGerencia'
         this.reportExcelPatch='/api/reporteExcel'
+        this.dashboardPatch='/api/dashboard'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -96,6 +97,7 @@ class Server {
         this.app.use( this.perfilesPatch, require('../routes/perfiles'))
         this.app.use( this.contratosGerenciaPatch, require('../routes/contratosGerencia'))
         this.app.use( this.reportExcelPatch, require('../routes/reporteExcel'))
+        this.app.use( this.dashboardPatch, require('../routes/dashboard'))
     }
 
     listen() {

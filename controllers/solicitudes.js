@@ -139,7 +139,8 @@ const solicitudesGet = async(req = request, res = response) => {
         ]
     };
 
-    console.log(query)
+
+
 
     if(options==1){
         const [ total, solicitudes  ] = await Promise.all([

@@ -8,10 +8,14 @@ const Gerencia = require('../models/gerencia');
 
 const gerenciaGet = async(req = request, res = response) => {
 
-    const { limite = 8, desde = 0, estado="",page=1,options=1 } = req.query;
+    const { limite = 8, desde = 0, estado="",page=1,options=1,n_gerencia="" } = req.query;
     const query = {  };//estado: true
     if(estado!==undefined && estado!=""){
         query.estado=true
+    }
+
+    if(n_gerencia!=""){
+        query.nombre_gerencia={$regex:`.*${n_gerencia},*`};//
     }
 
     const optionsPag = {

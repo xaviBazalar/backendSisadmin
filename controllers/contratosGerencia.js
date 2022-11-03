@@ -12,7 +12,7 @@ const ContratoGerencia = require('../models/contratoGerencia')
 
 const contratosGerenciaGet = async(req = request, res = response) => {
 
-    const { gerencia,estado="" ,n_contrato="",page=1,options=1} = req.query;
+    const { gerencia,estado="" ,n_contrato="",n_gerencia="",page=1,options=1} = req.query;
     let query = {}   ;
     let query_filter = {}   ;
     
@@ -24,6 +24,10 @@ const contratosGerenciaGet = async(req = request, res = response) => {
 
     if(estado!==undefined && estado!=""){
         query.estado=true
+    }
+
+    if(n_contrato!="" || n_gerencia!="" ){
+        query={"contrato.contrato:":{$regex:`.*K,*`}} // Usar para dejar en 0 y poder filtrar
     }
 
     
@@ -42,6 +46,16 @@ const contratosGerenciaGet = async(req = request, res = response) => {
             ContratoGerencia.countDocuments(query),
             ContratoGerencia.paginate(query,optionsPag)
         ]);
+
+        if(n_contrato!=""){
+            let contratosGFilter=await filterContratosCG(n_contrato)
+            contratos_gerencia.docs=contratosGFilter
+        }
+    
+        if(n_gerencia!=""){
+            let contratosGFilter=await filterGerenciaCG(n_gerencia)
+            contratos_gerencia.docs=contratosGFilter
+        }
 
         res.json({
             total,
@@ -63,6 +77,68 @@ const contratosGerenciaGet = async(req = request, res = response) => {
     
 
     
+}
+
+let filterContratosCG=async(n_contrato)=>{
+    let contratosTareaFilter=await ContratoGerencia.aggregate([
+          
+          
+        { 
+            "$lookup": {
+              "from": "gerencia",
+              "localField": "gerencia",
+              "foreignField": "_id",
+              "as": "gerencia"
+            }
+        },
+        {
+            $unwind: "$gerencia"
+        },
+        {
+            
+            "$lookup": {
+                "from": "contratos",
+                "localField": "contrato",
+                "foreignField": "_id",
+                "as": "contrato"
+              }
+        },
+        {
+            $unwind: "$contrato"
+        }]).match({"contrato.contrato": { $regex: `.*${n_contrato},*` }})
+
+        return contratosTareaFilter
+}
+
+let filterGerenciaCG=async(n_gerencia)=>{
+    let contratosTareaFilter=await ContratoGerencia.aggregate([
+          
+          
+        { 
+            "$lookup": {
+              "from": "gerencia",
+              "localField": "gerencia",
+              "foreignField": "_id",
+              "as": "gerencia"
+            }
+        },
+        {
+            $unwind: "$gerencia"
+        },
+        {
+            
+            "$lookup": {
+                "from": "contratos",
+                "localField": "contrato",
+                "foreignField": "_id",
+                "as": "contrato"
+              }
+        },
+        {
+            $unwind: "$contrato"
+        }]).match({"gerencia.nombre_gerencia": { $regex: `.*${n_gerencia},*` }})
+
+        return contratosTareaFilter
 }
 
 const contratosGerenciaPost = async(req, res = response) => {

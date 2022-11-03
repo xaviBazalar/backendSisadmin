@@ -1,6 +1,6 @@
 const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
-
+const mongoose = require('mongoose');
 
 const Usuario = require('../models/usuario');
 const Rol = require('../models/role');
@@ -9,8 +9,20 @@ const Perfil = require('../models/perfil.js');
 
 const usuariosGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0,page=1,options=1 } = req.query;
+    const { limite = 5, desde = 0,page=1,options=1,n_usuario="",perfil="",estado="" } = req.query;
     const query = {  };
+
+    if(n_usuario!=""){
+        query.nombre={$regex:`.*${n_usuario},*`};
+    }
+
+    if(perfil!=""){
+        query.perfil=mongoose.Types. ObjectId(perfil)
+    }
+
+    if(estado!=""){
+        query.estado=estado
+    }
 
     const optionsPag = {
         page: page,
