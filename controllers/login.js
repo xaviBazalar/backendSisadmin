@@ -16,7 +16,7 @@ const sendEmail=(email,nombre,clave)=>{
             subject : "Reestablecimiento de contraseña",
             html: "Su clave de acceso es: "+clave+" .Recuerde cambiar su clave para mayor seguridad.",
             email: {correo:email,nombre:nombre},
-            remitente: {correo:"platforms@inticousa.com",nombre:"SisAdmin"}
+            remitente: {correo:"platforms@inticousa.com",nombre:"Control de Actividades - Matriz Rasci"}
           }  
       })
     var options = {

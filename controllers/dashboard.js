@@ -118,10 +118,10 @@ const dashboardGet = async(req = request, res = response) => {
             "$match": {"$expr": {
                 $and: [
                         {
-                            $gte: ['$fecha_solicitud','2022-10-30']
+                            $gte: ['$fecha_solicitud',fec_desde]
                         },
                         {
-                            $lte: ['$fecha_solicitud','2022-11-03']
+                            $lte: ['$fecha_solicitud',fec_hasta]
                         }
                     ]
                 }
