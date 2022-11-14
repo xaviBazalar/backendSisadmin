@@ -24,6 +24,7 @@ const solicitudesGet = async(req = request, res = response) => {
     
     const { 
         id , 
+        contrato, 
         gerencia, 
         tarea, 
         perfil,
@@ -49,7 +50,9 @@ const solicitudesGet = async(req = request, res = response) => {
         query = { };
     }
 
-    
+    if(id===undefined & contrato!="" & contrato!==undefined){
+        query.contrato=mongoose.Types. ObjectId(contrato)
+    }
 
     if(id===undefined & solicitante!="" & solicitante!==undefined){
         query.solicitante=mongoose.Types. ObjectId(solicitante)

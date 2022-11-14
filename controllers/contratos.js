@@ -20,6 +20,19 @@ const contratosGet = async(req = request, res = response) => {
 
     if(n_contrato!=""){
         query.contrato={$regex:`.*${n_contrato},*`};//
+        let contratos_por_nc=await Contrato.aggregate([
+
+    
+            { "$group": {
+                "_id": {
+                    "nombre": "$contrato",
+                    "nro_contrato": "$contradoid",
+                    "id": "$_id",
+                },
+                "total": { "$sum": 1 }
+            }}
+        ]).match({"_id.nombre": { $regex: `.*${n_contrato},*` }})
+        console.log(contratos_por_nc)
     }
 
     if(nro_contrato!=""){

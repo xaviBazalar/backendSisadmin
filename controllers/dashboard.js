@@ -12,6 +12,19 @@ const dashboardGet = async(req = request, res = response) => {
     const query = {  };//estado: true
 
     let carga_trabajo=await Solicitud.aggregate([
+        {
+            "$match": {"$expr": {
+                $and: [
+                        {
+                            $gte: ['$fecha_solicitud',fec_desde]
+                        },
+                        {
+                            $lte: ['$fecha_solicitud',fec_hasta]
+                        }
+                    ]
+                }
+            }
+        },
         { 
             "$lookup": {
               "from": "estado_solicitud",
@@ -70,6 +83,19 @@ const dashboardGet = async(req = request, res = response) => {
     ])
 
     let carga_trabajo_total=await Solicitud.aggregate([
+        {
+            "$match": {"$expr": {
+                $and: [
+                        {
+                            $gte: ['$fecha_solicitud',fec_desde]
+                        },
+                        {
+                            $lte: ['$fecha_solicitud',fec_hasta]
+                        }
+                    ]
+                }
+            }
+        },
         { 
             "$lookup": {
               "from": "estado_solicitud",
@@ -92,6 +118,19 @@ const dashboardGet = async(req = request, res = response) => {
     ])
 
     let tareas_por_persona=await Solicitud.aggregate([
+        {
+            "$match": {"$expr": {
+                $and: [
+                        {
+                            $gte: ['$fecha_solicitud',fec_desde]
+                        },
+                        {
+                            $lte: ['$fecha_solicitud',fec_hasta]
+                        }
+                    ]
+                }
+            }
+        },
         { 
             "$lookup": {
               "from": "usuarios",
