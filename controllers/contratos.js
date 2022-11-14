@@ -32,7 +32,6 @@ const contratosGet = async(req = request, res = response) => {
                 "total": { "$sum": 1 }
             }}
         ]).match({"_id.nombre": { $regex: `.*${n_contrato},*` }})
-        console.log(contratos_por_nc)
     }
 
     if(nro_contrato!=""){
