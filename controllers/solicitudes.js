@@ -204,9 +204,9 @@ const solicitudesPost = async(req, res = response) => {
 
     let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
 
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante,sla} = req.body;
+    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante,sla,fecha_termino=""} = req.body;
     let fecha_entrega=getFecEntrega(sla);
-    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId ,ingresado,solicitante});
+    const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId ,ingresado,solicitante,fecha_termino});
 
     // Guardar en BD
     await solicitud.save();
@@ -263,7 +263,7 @@ const solicitudesPut = async(req, res = response) => {
     let evento;
 
     let solicitud_=id
-    
+
 
     let tituloNotificacionADC=""
     let solicitudTerminada=""
@@ -279,7 +279,8 @@ const solicitudesPut = async(req, res = response) => {
             fecha_inicio:fecha_inicio,
             fecha_entrega:fecha_entrega,
             gst:gst,
-            bko:bko
+            bko:bko,
+            fecha_termino:(estado_solicitud=="62fad63448d35ca4acd1467f")?getDateNow():""
         } 
 
         if(estado_solicitud=="62fad63448d35ca4acd1467f"){
@@ -351,7 +352,18 @@ const solicitudesPatch = (req, res = response) => {
     });
 }
 
+const getDateNow=()=>{
+    let hoy= new Date();
+   
+    let mes=((hoy.getMonth())+1);
+    mes=(mes.toString().length==1)?"0"+mes:mes;
+    let dia=hoy.getDate();
+    dia=(dia.toString().length==1)?"0"+dia:dia;
 
+    let hoyWithFormat=hoy.getFullYear()+"-"+mes+"-"+dia
+
+    return hoyWithFormat;
+}
 
 
 

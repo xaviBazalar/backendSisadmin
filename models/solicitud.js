@@ -53,6 +53,9 @@ const SolicitudSchema = Schema({
     ingresado: {
         type: Boolean,
     },
+    fecha_termino: {
+        type: String
+    },
 },
 { 
     collection : 'solicitudes' 
