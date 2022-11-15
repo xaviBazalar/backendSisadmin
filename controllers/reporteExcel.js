@@ -86,9 +86,10 @@ const generarExcel=async(desde,hasta,nombreExcel)=>{
     ws.cell(1, 6).string('Fecha Solicitud').style(style);
     ws.cell(1, 7).string('Estado').style(style);
     ws.cell(1, 8).string('Asignada').style(style);
-    ws.cell(1, 9).string('Fecha Inicio').style(style);
-    ws.cell(1, 10).string('Fecha Entrega').style(style);
-    ws.cell(1, 11).string('Resultado').style(style);
+    ws.cell(1, 9).string('Bko').style(style);
+    ws.cell(1, 10).string('Fecha Inicio').style(style);
+    ws.cell(1, 11).string('Fecha Entrega').style(style);
+    ws.cell(1, 12).string('Resultado').style(style);
 
     for(let solicitud of solicitudes){
         ws.cell(fila, 1).number(solicitud.idsecuencia).style(style);
@@ -99,9 +100,10 @@ const generarExcel=async(desde,hasta,nombreExcel)=>{
         ws.cell(fila, 6).string(solicitud.fecha_solicitud).style(style);
         ws.cell(fila, 7).string(solicitud.estado_solicitud.nombre_estado).style(style);
         ws.cell(fila, 8).string(solicitud.gst.nombre).style(style);
-        ws.cell(fila, 9).string(solicitud.fecha_inicio).style(style);
-        ws.cell(fila, 10).string(solicitud.fecha_entrega).style(style);
-        ws.cell(fila, 11).string(solicitud.estado_resultado.nombre_resultado).style(style);
+        ws.cell(fila, 9).string(solicitud.bko.nombre).style(style);
+        ws.cell(fila, 10).string(solicitud.fecha_inicio).style(style);
+        ws.cell(fila, 11).string(solicitud.fecha_entrega).style(style);
+        ws.cell(fila, 12).string(solicitud.estado_resultado.nombre_resultado).style(style);
         ++fila
     }
 
