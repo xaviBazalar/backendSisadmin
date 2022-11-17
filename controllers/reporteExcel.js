@@ -1,10 +1,12 @@
 const { response, request } = require('express');
+const mongoose = require('mongoose');
 
 const Solicitud = require('../models/solicitud');
 const Gerencia = require('../models/gerencia');
 const Contrato = require('../models/contrato');
 const Tarea = require('../models/tarea');
 const Usuario = require('../models/usuario');
+const Perfil = require('../models/perfil');
 const EstadoSolicitud = require('../models/estadoSolicitud.js');
 const EstadoResultado= require('../models/estadoResultado')
 
@@ -29,10 +31,10 @@ const reporteGet = async(req = request, res = response) => {
 
 const reportePost = async(req = request, res = response) => {
 
-    const { desde="",hasta=""  } = req.body;  
+    const { desde="",hasta="" ,user="" } = req.body;  
     let nroAletorio=new Date().getTime()
     let nombreExcel="docExcel/Reporte-"+nroAletorio+".xlsx"
-    let archivoReporte=await generarExcel(desde,hasta,nombreExcel)
+    let archivoReporte=await generarExcel(desde,hasta,nombreExcel,user)
 
     res.json({
         "total":"1",
@@ -41,7 +43,7 @@ const reportePost = async(req = request, res = response) => {
     });
 }
 
-const generarExcel=async(desde,hasta,nombreExcel)=>{
+const generarExcel=async(desde,hasta,nombreExcel,user)=>{
     // Require library
     var xl = require('excel4node');
 
@@ -63,6 +65,17 @@ const generarExcel=async(desde,hasta,nombreExcel)=>{
     let query={}
     query.fecha_solicitud={$gte: desde,$lte:  hasta}
 
+    const usuario = await Usuario.findById(mongoose.Types.ObjectId(user)).
+                    populate( { path: "perfil",model:Perfil})
+    
+    if(usuario.perfil.sigla=="BKO"){
+        query.bko=mongoose.Types.ObjectId(user)
+    }
+
+    if(usuario.perfil.sigla=="GST"){
+        query.gst=mongoose.Types.ObjectId(user)
+    }
+
     const [ solicitudes  ] = await Promise.all([
         Solicitud.find(query).
         populate( { path: "gerencia",model:Gerencia}).
@@ -82,20 +95,22 @@ const generarExcel=async(desde,hasta,nombreExcel)=>{
     ws.cell(1, 2).string('Solicitante').style(style);
     ws.cell(1, 3).string('Situacion').style(style);
     ws.cell(1, 4).string('Nombre').style(style);
+    ws.cell(1, 4).string('NroContrato').style(style);
     ws.cell(1, 5).string('Tarea').style(style);
     ws.cell(1, 6).string('Fecha Solicitud').style(style);
     ws.cell(1, 7).string('Estado').style(style);
     ws.cell(1, 8).string('Asignada').style(style);
     ws.cell(1, 9).string('Bko').style(style);
     ws.cell(1, 10).string('Fecha Inicio').style(style);
-    ws.cell(1, 11).string('Fecha Entrega').style(style);
+    ws.cell(1, 11).string('Fecha Estimada de Entrega').style(style);
     ws.cell(1, 12).string('Resultado').style(style);
 
     for(let solicitud of solicitudes){
         ws.cell(fila, 1).number(solicitud.idsecuencia).style(style);
         ws.cell(fila, 2).string(solicitud.solicitante.nombre).style(style);
         ws.cell(fila, 3).string("Enviada").style(style);
-        ws.cell(fila, 4).string(solicitud.contrato.contradoid+" "+solicitud.contrato.contrato).style(style);
+        ws.cell(fila, 4).string(solicitud.contrato.contrato).style(style);
+        ws.cell(fila, 4).string(solicitud.contrato.contradoid).style(style);
         ws.cell(fila, 5).string(solicitud.tarea.nombre_tarea).style(style);
         ws.cell(fila, 6).string(solicitud.fecha_solicitud).style(style);
         ws.cell(fila, 7).string(solicitud.estado_solicitud.nombre_estado).style(style);
