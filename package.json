@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
     "express-validator": "^6.9.2",
+    "https": "^1.0.0",
     "mongoose": "^5.11.15",
     "mongoose-paginate-v2": "^1.7.1"
   }

@@ -12,10 +12,12 @@ const filePost = async(req, res = response) => {
     }
 
     const { archivo } = req.files ;
+    console.log(archivo)
 
     let dataArchivo=archivo.name.split(".");
+    let extensionFile=(archivo.mimetype=="image/png")?"png":dataArchivo[1]
 
-    const nameFile=(archivo).md5+"."+dataArchivo[1];
+    const nameFile=(archivo).md5+"."+extensionFile;
     archivo.mv('./uploads/' + nameFile)
     res.json({
         urlFile:nameFile

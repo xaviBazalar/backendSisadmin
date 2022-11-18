@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const fileUpload =require('express-fileupload')
 const { dbConnection } = require('../database/config');
+const https = require('https');
+const fs = require('fs');
 
 class Server {
 
@@ -103,9 +105,21 @@ class Server {
     }
 
     listen() {
-        this.app.listen( this.port, () => {
-            console.log('Servidor corriendo en puerto', this.port );
-        });
+        if(process.env.FLAG_HTTPS==0){
+            this.app.listen( this.port, () => {
+                console.log('Servidor corriendo en puerto', this.port );
+            });
+        }else{
+            const PUERTO = process.env.PORT_HTTPS;
+
+            https.createServer({
+            cert: fs.readFileSync(process.env.FILE_CRT),
+            key: fs.readFileSync(process.env.FILE_KEY)
+            },this.app).listen(PUERTO, function(){
+                console.log('Servidor https corriendo en el puerto '+PUERTO);
+            });
+        }        
+
     }
 
 }
