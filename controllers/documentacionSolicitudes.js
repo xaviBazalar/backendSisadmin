@@ -43,7 +43,7 @@ const documentacionSolicitudGet = async(req = request, res = response) => {
     ]);
 
     if(n_contrato!=""){
-        let contratosTareaDEFilter=await filterContratosDG(n_contrato)
+        let contratosTareaDEFilter=await filterContratosDG(n_contrato.replace("amp;","&"))
         documentacion_solicitudes.docs=contratosTareaDEFilter
     }
 

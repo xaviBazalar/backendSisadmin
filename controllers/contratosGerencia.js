@@ -48,7 +48,7 @@ const contratosGerenciaGet = async(req = request, res = response) => {
         ]);
 
         if(n_contrato!=""){
-            let contratosGFilter=await filterContratosCG(n_contrato)
+            let contratosGFilter=await filterContratosCG(n_contrato.replace("amp;","&"))
             contratos_gerencia.docs=contratosGFilter
         }
     

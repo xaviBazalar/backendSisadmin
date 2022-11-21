@@ -49,7 +49,7 @@ const tareasContratoGet = async(req = request, res = response) => {
           },
     */
     if(n_contrato!=""){
-        let contratosTareaFilter=await filterContratosInTareaContratos(n_contrato)
+        let contratosTareaFilter=await filterContratosInTareaContratos(n_contrato.replace("amp;","&"))
         contratos.docs=contratosTareaFilter
     }
 

@@ -42,7 +42,7 @@ const tareaDocumentosSalidaGet = async(req = request, res = response) => {
         ]);
 
         if(n_contrato!=""){
-            let contratosTareaDSFilter=await filterContratosInDSTareaContratos(n_contrato)
+            let contratosTareaDSFilter=await filterContratosInDSTareaContratos(n_contrato.replace("amp;","&"))
             tarea_documentos_salida.docs=contratosTareaDSFilter
         }
     

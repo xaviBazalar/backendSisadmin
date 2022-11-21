@@ -19,7 +19,7 @@ const contratosGet = async(req = request, res = response) => {
     }
 
     if(n_contrato!=""){
-        query.contrato={$regex:`.*${n_contrato},*`};//
+        query.contrato={$regex:`.*${n_contrato.replace("amp;","&")},*`};//
         let contratos_por_nc=await Contrato.aggregate([
 
     
@@ -31,11 +31,11 @@ const contratosGet = async(req = request, res = response) => {
                 },
                 "total": { "$sum": 1 }
             }}
-        ]).match({"_id.nombre": { $regex: `.*${n_contrato},*` }})
+        ]).match({"_id.nombre": { $regex: `.*${n_contrato.replace("amp;","&")},*` }})
     }
 
     if(nro_contrato!=""){
-        query.contradoid={$regex:`.*${nro_contrato},*`};//
+        query.contradoid={$regex:`.*${nro_contrato.replace("amp;","&")},*`};//
     }
    
 
