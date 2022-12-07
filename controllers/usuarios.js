@@ -80,7 +80,7 @@ const usuariosPost = async(req, res = response) => {
 }
 
 const usuariosPut = async(req, res = response) => {
-    const { id,nombre,correo,login ,password,estado,perfil,autorizar=true} = req.body;
+    const { id,nombre,correo,login ,password,estado,perfil,autorizar=true,pin} = req.body;
     if(autorizar===undefined || autorizar=="undefined"){
         autorizar=true
     }
@@ -92,6 +92,7 @@ const usuariosPut = async(req, res = response) => {
         estado:estado,
         perfil:perfil,
         autorizar:(autorizar=="")?true:autorizar,
+        pin:pin
     }
 
 

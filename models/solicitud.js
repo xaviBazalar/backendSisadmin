@@ -56,6 +56,22 @@ const SolicitudSchema = Schema({
     fecha_termino: {
         type: String
     },
+    autorizacion:{
+        type: Boolean,
+        default:false
+    },
+    autorizacion_terminada:{
+        type: Boolean,
+        default:false
+    },
+    fecha_autorizacion_terminada:{
+        type: String,
+        default:""
+    },
+    hora_autorizacion_terminada:{
+        type: String,
+        default:""
+    }
 },
 { 
     collection : 'solicitudes' 

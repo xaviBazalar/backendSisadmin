@@ -16,6 +16,8 @@ const filePost = async(req, res = response) => {
 
     let dataArchivo=archivo.name.split(".");
     let extensionFile=(archivo.mimetype=="image/png")?"png":dataArchivo[1]
+    extensionFile=(archivo.mimetype=="image/jpg")?"jpg":extensionFile
+    extensionFile=(archivo.mimetype=="image/jpeg")?"jpg":extensionFile
 
     const nameFile=(archivo).md5+"."+extensionFile;
     archivo.mv('./uploads/' + nameFile)

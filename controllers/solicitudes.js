@@ -19,6 +19,7 @@ const EstadoSolicitud = require('../models/estadoSolicitud.js');
 const EstadoResultado= require('../models/estadoResultado')
 const BitacoraSolicitud= require('../models/bitacora_solicitud')
 const NotificacionUsuario= require('../models/notificacionUsuario')
+const AutorizacionSolicitud= require('../models/autorizacionSolicitud')
 
 const solicitudesGet = async(req = request, res = response) => {
     
@@ -204,7 +205,11 @@ const solicitudesPost = async(req, res = response) => {
 
     let idsecuencia=(solicitudes.length==0)?1:solicitudes[0].idsecuencia+1
 
-    const { gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante,sla,fecha_termino=""} = req.body;
+    const { 
+        gerencia, 
+        contrato, 
+        tarea, 
+        gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,randomId,ingresado,solicitante,sla,fecha_termino=""} = req.body;
     let fecha_entrega=getFecEntrega(sla);
     const solicitud = new Solicitud({ gerencia, contrato, tarea, gst ,bko,estado_solicitud,estado_resultado,observacion,fecha_solicitud,fecha_inicio,fecha_entrega,idsecuencia,randomId ,ingresado,solicitante,fecha_termino});
 
@@ -258,7 +263,7 @@ const solicitudesPut = async(req, res = response) => {
 
     const { id } = req.params;
 
-    const { estado_solicitud, fecha_inicio, fecha_entrega, gst, bko,estado_resultado,ingresado,solicitante } = req.body;
+    const { estado_solicitud, fecha_inicio, fecha_entrega, gst, bko,estado_resultado,ingresado,solicitante,autorizacion,usuarios_auth } = req.body;
     let dataUpdate;
     let evento;
 
@@ -267,7 +272,29 @@ const solicitudesPut = async(req, res = response) => {
 
     let tituloNotificacionADC=""
     let solicitudTerminada=""
-    if(ingresado!==undefined){
+    if(autorizacion!==undefined){
+        dataUpdate={
+            _id:id,
+            autorizacion:autorizacion,
+            autorizacion_terminada:false
+        } 
+
+        let usuariosAuth=usuarios_auth.split(",")
+        
+        for(let user of usuariosAuth){
+            var autorizacionSolicitud= new AutorizacionSolicitud({ solicitud:solicitud_,usuario:user });
+            await autorizacionSolicitud.save();
+
+            var infoNotificacion={
+                usuario:user,
+                tipo:"Autorizacion Solicitud",
+                link:"/autorizar-solicitud/"+solicitud_
+            }
+            const notificacioUsuario= new NotificacionUsuario(infoNotificacion)
+            await notificacioUsuario.save();
+        }
+        
+    }else if(ingresado!==undefined){
         dataUpdate={
             _id:id,
             ingresado:ingresado,
@@ -287,7 +314,7 @@ const solicitudesPut = async(req, res = response) => {
             solicitudTerminada=" - Terminada"
         }
 
-        const dataES= await EstadoSolicitud.findById(mongoose.Types. ObjectId(estado_solicitud))
+        const dataES= await EstadoSolicitud.findById(mongoose.Types.ObjectId(estado_solicitud))
         const usuario_ = await Usuario.findById(mongoose.Types. ObjectId(solicitante));
         evento=`Actualización Estado Solicitud - ${dataES.nombre_estado} - ${usuario_.nombre}`
 

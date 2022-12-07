@@ -29,11 +29,18 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: true
     },
+    pin:{
+        type: String,
+        default:""
+    }
     /*,
     google: {
         type: Boolean,
         default: false
     },*/
+},
+{ 
+    collection : 'usuarios' 
 });
 
 UsuarioSchema.plugin(mongoosePaginate)

@@ -22,6 +22,7 @@ class Server {
         this.loginPatch='/api/login'
         this.historialResultadoSolicitudPatch='/api/historialResultadoSolicitud'
         this.filePatch='/api/upload'
+        this.fileGooglePatch='/api/uploadStorage'
         this.documentosEntradaPatch='/api/documentosEntrada'
         this.documentosSalidaPatch='/api/documentosSalida'
         this.tareaDocumentosEntradaPatch='/api/tareaDocumentosEntrada'
@@ -37,6 +38,8 @@ class Server {
         this.reportExcelPatch='/api/reporteExcel'
         this.dashboardPatch='/api/dashboard'
         this.recoveryPatch='/api/recovery'
+        this.autorizacionSolicitudPath='/api/auth-request'
+        this.avisoExtraPath='/api/aviso-extra'
         // Conectar a base de datos
         this.conectarDB();
 
@@ -102,6 +105,9 @@ class Server {
         this.app.use( this.reportExcelPatch, require('../routes/reporteExcel'))
         this.app.use( this.dashboardPatch, require('../routes/dashboard'))
         this.app.use( this.recoveryPatch, require('../routes/recoveryUsuario'))
+        this.app.use( this.fileGooglePatch,require('../routes/uploadGoogle'))
+        this.app.use( this.autorizacionSolicitudPath, require('../routes/autorizacionSolicitud'))
+        this.app.use( this.avisoExtraPath, require('../routes/avisoExtra'))
     }
 
     listen() {
