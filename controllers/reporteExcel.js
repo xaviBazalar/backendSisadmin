@@ -110,7 +110,7 @@ const generarExcel=async(desde,hasta,nombreExcel,user)=>{
         ws.cell(fila, 1).number(solicitud.idsecuencia).style(style);
         ws.cell(fila, 2).string(solicitud.solicitante.nombre).style(style);
         ws.cell(fila, 3).string("Enviada").style(style);
-        ws.cell(fila, 4).string(solicitud.gerenca.nombre_gerencia).style(style);
+        ws.cell(fila, 4).string(solicitud.gerencia.nombre_gerencia).style(style);
         ws.cell(fila, 5).string(solicitud.contrato.contrato).style(style);
         ws.cell(fila, 6).string(solicitud.contrato.contradoid).style(style);
         ws.cell(fila, 7).string(solicitud.tarea.nombre_tarea).style(style);
