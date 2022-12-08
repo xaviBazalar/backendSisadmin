@@ -3,26 +3,45 @@ const bcryptjs = require('bcryptjs');
 
 
 const AvisoExtra = require('../models/avisoExtra');
-
+const Contrato= require('../models/contrato')
 
 
 const avisoExtraGet = async(req = request, res = response) => {
 
-    //const { limite = 8, desde = 0, estado="",page=1,options=1,n_gerencia="" } = req.query;
-    //const query = {  };//estado: true
-    let avisos_extra=await AvisoExtra.aggregate([
-        { "$group": {
-            "_id": {
-                "email": "$email"
-            },
-            "total": { "$sum": 1 }
-        }}
-    ])
+    const { email="" } = req.query;
+    let query = {  };//estado: true
+    let avisos_extra
+    if(email!=""){
+        
+        query.email=email
+        const [ avisos_extra ] = await Promise.all([
+            AvisoExtra.find(query).
+            populate( { path: "contrato",model:Contrato})
+        ]);
 
+        res.json({
+            avisos_extra
+        });
+    
+    }else{
+        avisos_extra=await AvisoExtra.aggregate([
+            { "$group": {
+                "_id": {
+                    "email": "$email"
+                },
+                "total": { "$sum": 1 }
+            }}
+        ])
 
-    res.json({
+        res.json({
             avisos_extra
     });
+    }
+
+    
+
+
+   
         
 }
 
