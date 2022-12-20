@@ -115,10 +115,21 @@ const contratosPatch = (req, res = response) => {
 }
 
 
+const contratosDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    contrato = await Contrato.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
+
 
 module.exports = {
     contratosGet,
     contratosPost,
     contratosPut,
     contratosPatch,
+    contratosDel
 }

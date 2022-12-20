@@ -175,10 +175,21 @@ const contratosGerenciaPatch = (req, res = response) => {
     });
 }
 
+const contratosGerenciaDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    contrato_gerencia = await ContratoGerencia.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
+
 
 module.exports = {
     contratosGerenciaGet,
     contratosGerenciaPost,
     contratosGerenciaPut,
     contratosGerenciaPatch,
+    contratosGerenciaDel
 }

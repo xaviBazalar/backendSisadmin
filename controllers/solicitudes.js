@@ -238,13 +238,17 @@ const solicitudesPost = async(req, res = response) => {
 
     /** Notificacion */
     const solicitudA = await Solicitud.findById(solicitud_);
- 
-    let queryContrato={"_id":mongoose.Types. ObjectId(solicitudA.contrato)}
+    //console.log("solicitudA",solicitudA)
+    //let queryContrato={"_id":mongoose.Types. ObjectId(solicitudA.contrato)}
+    let queryContrato={"_id":mongoose.Types. ObjectId(contrato)}
+    
 
     const [ contratos ] = await Promise.all([
         Contrato.find(queryContrato).
         populate({ path: "adc",model:Usuario})
     ]);
+
+    //console.log("contratos",contratos)
 
     usuario=contratos[0].adc._id
     tipo="Ingreso Nueva Solicitud"
@@ -392,6 +396,15 @@ const getDateNow=()=>{
     return hoyWithFormat;
 }
 
+const solicitudesDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    solicitud = await Solicitud.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 
 module.exports = {
@@ -399,4 +412,5 @@ module.exports = {
     solicitudesPost,
     solicitudesPut,
     solicitudesPatch,
+    solicitudesDel
 }

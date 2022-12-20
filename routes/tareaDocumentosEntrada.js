@@ -1,7 +1,7 @@
 
 const { Router } = require('express');
 
-const {tareaDocumentosEntradaGet, tareaDocumentosEntradaPatch, tareaDocumentosEntradaPost,tareaDocumentosEntradaPut}=require('../controllers/tareaDocumentosEntrada');
+const {tareaDocumentosEntradaGet, tareaDocumentosEntradaPatch, tareaDocumentosEntradaPost,tareaDocumentosEntradaPut, tareaDocumentosEntradaDel}=require('../controllers/tareaDocumentosEntrada');
 
 const router = Router();
 
@@ -13,5 +13,6 @@ router.patch('/', tareaDocumentosEntradaPatch );
 
 router.put('/',tareaDocumentosEntradaPut );
 
+router.delete('/',tareaDocumentosEntradaDel );
 
 module.exports = router;

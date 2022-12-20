@@ -201,10 +201,20 @@ const tareaDocumentosSalidaPatch = (req, res = response) => {
     });
 }
 
+const tareaDocumentosSalidaDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    tareaDocumentoSalida = await TareaDocumentosSalida.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 module.exports = {
     tareaDocumentosSalidaGet,
     tareaDocumentosSalidaPost,
     tareaDocumentosSalidaPut,
     tareaDocumentosSalidaPatch,
+    tareaDocumentosSalidaDel
 }

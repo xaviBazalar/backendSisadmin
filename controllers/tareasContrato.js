@@ -214,6 +214,15 @@ const tareasContratoPatch = (req, res = response) => {
     });
 }
 
+const tareasContratoDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    tarea_contrato = await TareaContrato.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 
 module.exports = {
@@ -221,4 +230,5 @@ module.exports = {
     tareasContratoPost,
     tareasContratoPut,
     tareasContratoPatch,
+    tareasContratoDel
 }

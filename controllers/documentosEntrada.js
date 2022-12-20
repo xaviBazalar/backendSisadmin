@@ -83,10 +83,22 @@ const documentosEntradaPatch = (req, res = response) => {
     });
 }
 
+const documentosEntradaDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    documento_entrada = await DocumentoEntrada.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
+
+
 
 module.exports = {
     documentosEntradaGet,
     documentosEntradaPost,
     documentosEntradaPut,
     documentosEntradaPatch,
+    documentosEntradaDel
 }

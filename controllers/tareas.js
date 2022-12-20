@@ -83,10 +83,21 @@ const tareasPatch = (req, res = response) => {
     });
 }
 
+const tareasDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    tarea = await Tarea.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
+
 
 module.exports = {
     tareasGet,
     tareasPost,
     tareasPut,
-    tareasPatch
+    tareasPatch,
+    tareasDel
 }

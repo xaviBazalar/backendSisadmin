@@ -160,10 +160,21 @@ const documentacionSolicitudPatch = (req, res = response) => {
     });
 }
 
+const documentacionSolicitudDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    documentacion_solicitud = await DocumentacionSolicitud.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
+
 
 module.exports = {
     documentacionSolicitudGet,
     documentacionSolicitudPost,
     documentacionSolicitudPut,
     documentacionSolicitudPatch,
+    documentacionSolicitudDel
 }

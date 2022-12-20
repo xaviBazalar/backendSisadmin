@@ -124,7 +124,7 @@ const usuariosPatch = (req, res = response) => {
     });
 }
 
-const usuariosDelete = async(req, res = response) => {
+/*const usuariosDelete = async(req, res = response) => {
 
     const { id } = req.params;
 
@@ -135,8 +135,18 @@ const usuariosDelete = async(req, res = response) => {
 
 
     res.json(usuario);
-}
+}*/
 
+
+const usuariosDelete = async( req, res ) =>{
+    const { id } = req.body;
+
+    usuario = await Usuario.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 
 

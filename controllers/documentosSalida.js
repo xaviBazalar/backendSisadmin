@@ -80,10 +80,20 @@ const documentosSalidaPatch = (req, res = response) => {
     });
 }
 
+const documentosSalidaDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    documento_salida = await DocumentoSalida.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 module.exports = {
     documentosSalidaGet,
     documentosSalidaPost,
     documentosSalidaPut,
     documentosSalidaPatch,
+    documentosSalidaDel
 }

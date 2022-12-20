@@ -83,6 +83,15 @@ const gerenciaPatch = (req, res = response) => {
     });
 }
 
+const gerenciaDel = async( req, res ) =>{
+    const { id } = req.body;
+
+    gerencia = await Gerencia.findByIdAndDelete(id)
+
+    res.json({
+        ok: true
+    });  
+}
 
 
 
@@ -90,6 +99,7 @@ module.exports = {
     gerenciaGet,
     gerenciaPost,
     gerenciaPut,
-    gerenciaPatch
+    gerenciaPatch,
+    gerenciaDel
 
 }

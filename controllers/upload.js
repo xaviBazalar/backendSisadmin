@@ -12,7 +12,7 @@ const filePost = async(req, res = response) => {
     }
 
     const { archivo } = req.files ;
-    console.log(archivo)
+    //console.log(archivo)
 
     let dataArchivo=archivo.name.split(".");
     let extensionFile=(archivo.mimetype=="image/png")?"png":dataArchivo[1]
