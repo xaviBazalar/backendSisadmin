@@ -267,11 +267,48 @@ const solicitudesPut = async(req, res = response) => {
 
     const { id } = req.params;
 
-    const { estado_solicitud, fecha_inicio, fecha_entrega, gst, bko,estado_resultado,ingresado,solicitante,autorizacion,usuarios_auth } = req.body;
+    const { 
+        gerencia="",
+        contrato="",
+        tarea="",
+        observacion="",
+        fecha_solicitud="",
+        continueUpdate=false,
+        estado_solicitud, 
+        fecha_inicio, 
+        fecha_entrega, 
+        gst, 
+        bko,
+        estado_resultado,
+        ingresado,
+        solicitante,
+        autorizacion,
+        usuarios_auth } = req.body;
+
     let dataUpdate;
     let evento;
 
     let solicitud_=id
+
+    if(continueUpdate){
+        dataUpdate={
+            gerencia:gerencia,
+            contrato:contrato,
+            tarea:tarea,
+            gst:gst,
+            bko:bko,
+            estado_solicitud:"62fad5db48d35ca4acd1467c",
+            estado_resultado:"62fad65648d35ca4acd14682",
+            observacion:observacion,
+            fecha_solicitud:fecha_solicitud,
+            fecha_inicio:fecha_inicio,
+            solicitante:solicitante,
+            ingresado:ingresado
+        }
+      const solicitud = await Solicitud.findByIdAndUpdate( id, dataUpdate );
+      res.json(solicitud);
+      return
+    }
 
 
     let tituloNotificacionADC=""

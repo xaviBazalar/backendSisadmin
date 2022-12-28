@@ -89,12 +89,23 @@ const avisoExtraPatch = (req, res = response) => {
 }
 
 
+const avisoExtraDel = async( req, res ) =>{
+    const { email } = req.body;
+
+    aviso_extra = await AvisoExtra.deleteMany({email:email})
+
+    res.json({
+        ok: true
+    });  
+}
+
 
 
 module.exports = {
     avisoExtraGet,
     avisoExtraPost,
     avisoExtraPut,
-    avisoExtraPatch
+    avisoExtraPatch,
+    avisoExtraDel
 
 }
