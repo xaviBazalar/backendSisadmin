@@ -14,6 +14,7 @@ const avisoExtraGet = async(req = request, res = response) => {
     if(email!=""){
         
         query.email=email
+        
         const [ avisos_extra ] = await Promise.all([
             AvisoExtra.find(query).
             populate( { path: "contrato",model:Contrato})
@@ -48,14 +49,26 @@ const avisoExtraGet = async(req = request, res = response) => {
 const avisoExtraPost = async(req, res = response) => {
 
     const { nombre,email,contrato } = req.body;
-    const aviso_extra = new AvisoExtra({ nombre, email,contrato });
+    try {
+        const aviso_extra = new AvisoExtra({ nombre, email,contrato });
+        // Guardar en BD
+        await aviso_extra.save();
 
-    // Guardar en BD
-    await aviso_extra.save();
+        res.json({
+            error:false,
+            msg:"",
+            aviso_extra
+        });
+    } catch (error) {
+       
+        res.json({
+            error:true,
+            msg:"No se pudo registrar , recordar que no se puede duplicar el correo con un contrato ya existente",
+            aviso_extra:[]
+        });
+    }
+    
 
-    res.json({
-        aviso_extra
-    });
 
 }
 
